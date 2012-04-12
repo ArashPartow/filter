@@ -2369,7 +2369,7 @@ namespace strtk
    {
    public:
 
-      typedef typename Sequence::value_type T;
+      typedef typename Sequence::value_type value_type;
 
       explicit inline range_to_type_back_inserter_iterator(Sequence& sequence)
       : sequence_(sequence)
@@ -2391,7 +2391,7 @@ namespace strtk
       template <typename Iterator>
       inline range_to_type_back_inserter_iterator& operator=(const std::pair<Iterator,Iterator>& r)
       {
-         T t = T();
+         value_type t = value_type();
          if (string_to_type_converter(r.first,r.second,t))
             sequence_.push_back(t);
          return (*this);
@@ -2399,7 +2399,7 @@ namespace strtk
 
       inline range_to_type_back_inserter_iterator& operator=(const std::string& s)
       {
-         T t = T();
+         value_type t = value_type();
          if (string_to_type_converter(s.data(),s.data() + s.size(),t))
             sequence_.push_back(t);
          return (*this);
@@ -2408,7 +2408,7 @@ namespace strtk
       template <typename Iterator>
       inline void operator()(const std::pair<Iterator,Iterator>& r) const
       {
-         T t;
+         value_type t;
          if (string_to_type_converter(r.first,r.second,t))
             sequence_.push_back(t);
       }
@@ -2416,7 +2416,7 @@ namespace strtk
       template <typename Iterator>
       inline void operator()(const Iterator begin, const Iterator end)
       {
-         sequence_.push_back(string_to_type_converter<T>(begin,end));
+         sequence_.push_back(string_to_type_converter<value_type>(begin,end));
       }
 
       inline range_to_type_back_inserter_iterator& operator*()
@@ -2454,7 +2454,7 @@ namespace strtk
    {
    public:
 
-      typedef typename Set::value_type T;
+      typedef typename Set::value_type value_type;
 
       explicit inline range_to_type_inserter_iterator(Set& set)
       : set_(set)
@@ -2476,7 +2476,7 @@ namespace strtk
       template <typename Iterator>
       inline range_to_type_inserter_iterator& operator=(const std::pair<Iterator,Iterator>& r)
       {
-         T t;
+         value_type t;
          if (string_to_type_converter(r.first,r.second,t))
             set_.insert(t);
          return (*this);
@@ -2485,7 +2485,7 @@ namespace strtk
       template <typename Iterator>
       inline void operator()(const std::pair<Iterator,Iterator>& r)
       {
-         T t;
+         value_type t;
          if (string_to_type_converter(r.first,r.second,t))
             set_.insert(t);
       }
@@ -2525,7 +2525,7 @@ namespace strtk
    {
    public:
 
-      typedef typename Container::value_type T;
+      typedef typename Container::value_type value_type;
 
       explicit inline range_to_type_push_inserter_iterator(Container& container)
       : container_(container)
@@ -2547,7 +2547,7 @@ namespace strtk
       template <typename Iterator>
       inline range_to_type_push_inserter_iterator& operator=(const std::pair<Iterator,Iterator>& r)
       {
-         T t;
+         value_type t;
          if (string_to_type_converter(r.first,r.second,t))
             container_.push(t);
          return (*this);
@@ -2556,7 +2556,7 @@ namespace strtk
       template <typename Iterator>
       inline void operator()(const std::pair<Iterator,Iterator>& r)
       {
-         T t;
+         value_type t;
          if (string_to_type_converter(r.first,r.second,t))
             container_.push(t);
       }
@@ -2765,6 +2765,114 @@ namespace strtk
    inline push_inserter_iterator<Container> push_inserter(Container& c)
    {
       return push_inserter_iterator<Container>(c);
+   }
+
+   template <typename T>
+   class range_to_ptr_type_iterator : public std::iterator<std::output_iterator_tag,
+                                                           void,
+                                                           void,
+                                                           void,
+                                                           void>
+   {
+   public:
+
+      typedef T value_type;
+
+      explicit inline range_to_ptr_type_iterator(T* pointer, std::size_t& insert_count)
+      : pointer_(pointer),
+        insert_count_(insert_count)
+      {}
+
+      range_to_ptr_type_iterator(const range_to_ptr_type_iterator& it)
+      : pointer_(it.pointer_)
+      {}
+
+      inline range_to_ptr_type_iterator& operator=(const range_to_ptr_type_iterator& it)
+      {
+         if (this != &it)
+         {
+            this->pointer_ = it.pointer_;
+         }
+         return (*this);
+      }
+
+      template <typename Iterator>
+      inline range_to_ptr_type_iterator& operator=(const std::pair<Iterator,Iterator>& r)
+      {
+         value_type t = value_type();
+         if (string_to_type_converter(r.first,r.second,t))
+         {
+            (*pointer_) = t;
+            ++pointer_;
+            ++insert_count_;
+         }
+         return (*this);
+      }
+
+      inline range_to_ptr_type_iterator& operator=(const std::string& s)
+      {
+         value_type t = value_type();
+         if (string_to_type_converter(s.data(),s.data() + s.size(),t))
+         {
+            (*pointer_) = t;
+            ++pointer_;
+            ++insert_count_;
+         }
+         return (*this);
+      }
+
+      template <typename Iterator>
+      inline void operator()(const std::pair<Iterator,Iterator>& r) const
+      {
+         value_type t;
+         if (string_to_type_converter(r.first,r.second,t))
+         {
+            (*pointer_) = t;
+            ++pointer_;
+            ++insert_count_;
+         }
+      }
+
+      template <typename Iterator>
+      inline void operator()(const Iterator begin, const Iterator end)
+      {
+         (*pointer_) = string_to_type_converter<T>(begin,end);
+         ++pointer_;
+         ++insert_count_;
+      }
+
+      inline range_to_ptr_type_iterator& operator*()
+      {
+         return (*this);
+      }
+
+      inline range_to_ptr_type_iterator& operator++()
+      {
+         return (*this);
+      }
+
+      inline range_to_ptr_type_iterator operator++(int)
+      {
+         return (*this);
+      }
+
+   private:
+
+      T* pointer_;
+      std::size_t& insert_count_;
+   };
+
+   template <typename T>
+   inline range_to_ptr_type_iterator<T> range_to_ptr_type(T* pointer, std::size_t& insert_count)
+   {
+      return (range_to_ptr_type_iterator<T>(pointer,insert_count));
+   }
+
+   template <typename T>
+   inline range_to_ptr_type_iterator<T> range_to_ptr_type(T* pointer)
+   {
+      static std::size_t insert_count = 0;
+      return (range_to_ptr_type_iterator<T>(pointer,insert_count));
    }
 
    template <typename T>
@@ -7884,142 +7992,140 @@ namespace strtk
       {
       private:
 
-      class container_adder_base
-      {
-      public:
-
-         typedef const char* itr_type;
-
-         virtual ~container_adder_base(){}
-
-         template <typename InputIterator>
-         inline bool add(const InputIterator begin, const InputIterator end) const
+         class container_adder_base
          {
-            return add_impl(begin,end);
-         }
+         public:
 
-         template <typename InputIterator>
-         inline bool add(const std::pair<InputIterator,InputIterator>& range) const
+            typedef const char* itr_type;
+
+            virtual ~container_adder_base(){}
+
+            template <typename InputIterator>
+            inline bool add(const InputIterator begin, const InputIterator end) const
+            {
+               return add_impl(begin,end);
+            }
+
+            template <typename InputIterator>
+            inline bool add(const std::pair<InputIterator,InputIterator>& range) const
+            {
+               return add(range.first,range.second);
+            }
+
+         protected:
+
+            virtual bool add_impl(const itr_type begin, const itr_type end) const = 0;
+
+         };
+
+         template <typename T,
+                   typename Allocator,
+                   template <typename,typename> class Sequence>
+         class sequence_adder_impl : public container_adder_base
          {
-            return add(range.first,range.second);
-         }
+         public:
 
-      protected:
+            typedef Sequence<T,Allocator> sequence_t;
 
-         virtual bool add_impl(const itr_type begin, const itr_type end) const = 0;
+            sequence_adder_impl(sequence_t& seq)
+            : sequence_(seq)
+            {}
 
-      };
+         protected:
 
-      template <typename T,
-                typename Allocator,
-                template <typename,typename> class Sequence>
-      class sequence_adder_impl : public container_adder_base
-      {
-      public:
+            bool add_impl(const itr_type begin, const itr_type end) const
+            {
+               T t;
+               if (!string_to_type_converter(begin,end,t)) return false;
+               sequence_.push_back(t);
+               return true;
+            }
 
-         typedef Sequence<T,Allocator> sequence_t;
+         private:
 
-         sequence_adder_impl(sequence_t& seq)
-         : sequence_(seq)
-         {}
+            sequence_adder_impl operator=(const sequence_adder_impl&);
 
-      protected:
+            sequence_t& sequence_;
+         };
 
-         bool add_impl(const itr_type begin, const itr_type end) const
+         template <typename T,
+                   typename Comparator,
+                   typename Allocator,
+                   template <typename,typename,typename> class Set>
+         class set_adder_impl : public container_adder_base
          {
-            T t;
-            if (!string_to_type_converter(begin,end,t)) return false;
-            sequence_.push_back(t);
-            return true;
-         }
+         public:
 
-      private:
+            set_adder_impl(Set<T,Comparator,Allocator>& set)
+            : set_(set)
+            {}
 
-         sequence_adder_impl operator=(const sequence_adder_impl&);
+            bool add_impl(const itr_type begin, const itr_type end) const
+            {
+               T t;
+               if (!string_to_type_converter(begin,end,t)) return false;
+               set_.insert(t);
+               return true;
+            }
 
-         sequence_t& sequence_;
-      };
+         private:
 
-      template <typename T,
-                typename Comparator,
-                typename Allocator,
-                template <typename,typename,typename> class Set>
-      class set_adder_impl : public container_adder_base
-      {
-      public:
+            set_adder_impl operator=(const set_adder_impl&);
 
-         set_adder_impl(Set<T,Comparator,Allocator>& set)
-         : set_(set)
-         {}
+            Set<T,Comparator,Allocator>& set_;
+         };
 
-         bool add_impl(const itr_type begin, const itr_type end) const
+         template <typename T,
+                   typename Container,
+                   typename Comparator>
+         class pq_adder_impl : public container_adder_base
          {
-            T t;
-            if (!string_to_type_converter(begin,end,t)) return false;
-            set_.insert(t);
-            return true;
-         }
+         public:
 
-      private:
+            pq_adder_impl(std::priority_queue<T,Container,Comparator>& pq)
+            : pq_(pq)
+            {}
 
-         set_adder_impl operator=(const set_adder_impl&);
+            bool add_impl(const itr_type begin, const itr_type end) const
+            {
+               T t;
+               if (!string_to_type_converter(begin,end,t)) return false;
+               pq_.push(t);
+               return true;
+            }
 
-         Set<T,Comparator,Allocator>& set_;
-      };
+         private:
 
-      template <typename T,
-                typename Container,
-                typename Comparator>
-      class pq_adder_impl : public container_adder_base
-      {
-      public:
+            pq_adder_impl operator=(const pq_adder_impl&);
 
-         pq_adder_impl(std::priority_queue<T,Container,Comparator>& pq)
-         : pq_(pq)
-         {}
+            std::priority_queue<T,Container,Comparator>& pq_;
+         };
 
-         bool add_impl(const itr_type begin, const itr_type end) const
+         template <typename T,
+                   typename Container,
+                   template <typename,typename> class SContainer>
+         class stack_queue_adder_impl : public container_adder_base
          {
-            T t;
-            if (!string_to_type_converter(begin,end,t)) return false;
-            pq_.push(t);
-            return true;
-         }
+         public:
 
-      private:
+            stack_queue_adder_impl(SContainer<T,Container>& container)
+            : container_(container)
+            {}
 
-         pq_adder_impl operator=(const pq_adder_impl&);
+            bool add_impl(const itr_type begin, const itr_type end) const
+            {
+               T t;
+               if (!string_to_type_converter(begin,end,t)) return false;
+               container_.push(t);
+               return true;
+            }
 
-         std::priority_queue<T,Container,Comparator>& pq_;
-      };
+         private:
 
+            stack_queue_adder_impl operator=(const stack_queue_adder_impl&);
 
-      template <typename T,
-                typename Container,
-                template <typename,typename> class SContainer>
-      class stack_queue_adder_impl : public container_adder_base
-      {
-      public:
-
-          stack_queue_adder_impl(SContainer<T,Container>& container)
-          : container_(container)
-          {}
-
-          bool add_impl(const itr_type begin, const itr_type end) const
-          {
-              T t;
-              if (!string_to_type_converter(begin,end,t)) return false;
-              container_.push(t);
-              return true;
-          }
-
-      private:
-
-         stack_queue_adder_impl operator=(const stack_queue_adder_impl&);
-
-          SContainer<T,Container>& container_;
-      };
-
+            SContainer<T,Container>& container_;
+         };
 
       public:
 
@@ -8477,18 +8583,21 @@ namespace strtk
                               Sequence<T,Allocator>& sequence,
                               const split_options::type& split_option = split_options::compress_delimiters)
    {
+      typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
+      const std::size_t original_size = sequence.size();
       if (1 == delimiters.size())
-         return split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
-                        begin,end,
-                        n,
-                        range_to_type_back_inserter(sequence),
-                        split_option);
+         split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
+                 begin,end,
+                 n,
+                 range_to_type_back_inserter(sequence),
+                 split_option);
       else
-         return split_n(multiple_char_delimiter_predicate(delimiters),
-                        begin,end,
-                        n,
-                        range_to_type_back_inserter(sequence),
-                        split_option);
+         split_n(multiple_char_delimiter_predicate(delimiters),
+                 begin,end,
+                 n,
+                 range_to_type_back_inserter(sequence),
+                 split_option);
+      return sequence.size() - original_size;
    }
 
    template <typename InputIterator,
@@ -8502,18 +8611,21 @@ namespace strtk
                               std::set<T,Comparator,Allocator>& set,
                               const split_options::type& split_option = split_options::compress_delimiters)
    {
+      typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
+      const std::size_t original_size = set.size();
       if (1 == delimiters.size())
-         return split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
-                        begin,end,
-                        n,
-                        range_to_type_inserter(set),
-                        split_option);
+         split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
+                 begin,end,
+                 n,
+                 range_to_type_inserter(set),
+                 split_option);
       else
-         return split_n(multiple_char_delimiter_predicate(delimiters),
-                        begin,end,
-                        n,
-                        range_to_type_inserter(set),
-                        split_option);
+         split_n(multiple_char_delimiter_predicate(delimiters),
+                 begin,end,
+                 n,
+                 range_to_type_inserter(set),
+                 split_option);
+      return set.size() - original_size;
    }
 
    template <typename InputIterator,
@@ -8527,18 +8639,21 @@ namespace strtk
                               std::multiset<T,Comparator,Allocator>& multiset,
                               const split_options::type& split_option = split_options::compress_delimiters)
    {
+      typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
+      const std::size_t original_size = multiset.size();
       if (1 == delimiters.size())
-         return split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
-                        begin,end,
-                        n,
-                        range_to_type_inserter(multiset),
-                        split_option);
+         split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
+                 begin,end,
+                 n,
+                 range_to_type_inserter(multiset),
+                 split_option);
       else
-         return split_n(multiple_char_delimiter_predicate(delimiters),
-                        begin,end,
-                        n,
-                        range_to_type_inserter(multiset),
-                        split_option);
+         split_n(multiple_char_delimiter_predicate(delimiters),
+                 begin,end,
+                 n,
+                 range_to_type_inserter(multiset),
+                 split_option);
+      return multiset.size() - original_size;
    }
 
    template <typename InputIterator,
@@ -8552,18 +8667,20 @@ namespace strtk
                               const split_options::type& split_option = split_options::compress_delimiters)
    {
       typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
+      const std::size_t original_size = queue.size();
       if (1 == delimiters.size())
-         return split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
-                        begin,end,
-                        n,
-                        range_to_type_push_inserter(queue),
-                        split_option);
+         split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
+                 begin,end,
+                 n,
+                 range_to_type_push_inserter(queue),
+                 split_option);
       else
-         return split_n(multiple_char_delimiter_predicate(delimiters),
-                        begin,end,
-                        n,
-                        range_to_type_push_inserter(queue),
-                        split_option);
+         split_n(multiple_char_delimiter_predicate(delimiters),
+                 begin,end,
+                 n,
+                 range_to_type_push_inserter(queue),
+                 split_option);
+      return queue.size() - original_size;
    }
 
    template <typename InputIterator,
@@ -8577,18 +8694,20 @@ namespace strtk
                               const split_options::type& split_option = split_options::compress_delimiters)
    {
       typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
+      const std::size_t original_size = stack.size();
       if (1 == delimiters.size())
-         return split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
-                        begin,end,
-                        n,
-                        range_to_type_push_inserter(stack),
-                        split_option);
+         split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
+                 begin,end,
+                 n,
+                 range_to_type_push_inserter(stack),
+                 split_option);
       else
-         return split_n(multiple_char_delimiter_predicate(delimiters),
-                        begin,end,
-                        n,
-                        range_to_type_push_inserter(stack),
-                        split_option);
+         split_n(multiple_char_delimiter_predicate(delimiters),
+                 begin,end,
+                 n,
+                 range_to_type_push_inserter(stack),
+                 split_option);
+      return stack.size() - original_size;
    }
 
    template <typename InputIterator,
@@ -8603,18 +8722,45 @@ namespace strtk
                               const split_options::type& split_option = split_options::compress_delimiters)
    {
       typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
+      const std::size_t original_size = priority_queue.size();
       if (1 == delimiters.size())
-         return split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
-                        begin,end,
-                        n,
-                        range_to_type_push_inserter(priority_queue),
-                        split_option);
+         split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
+                 begin,end,
+                 n,
+                 range_to_type_push_inserter(priority_queue),
+                 split_option);
       else
-         return split_n(multiple_char_delimiter_predicate(delimiters),
-                        begin,end,
-                        n,
-                        range_to_type_push_inserter(priority_queue),
-                        split_option);
+         split_n(multiple_char_delimiter_predicate(delimiters),
+                 begin,end,
+                 n,
+                 range_to_type_push_inserter(priority_queue),
+                 split_option);
+      return priority_queue.size() - original_size;
+   }
+
+   template <typename InputIterator, typename T>
+   inline std::size_t parse_n(const InputIterator begin,
+                              const InputIterator end,
+                              const std::string& delimiters,
+                              const std::size_t& n,
+                              T* out,
+                              const split_options::type& split_option = split_options::compress_delimiters)
+   {
+      typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
+      std::size_t insert_count = 0;
+      if (1 == delimiters.size())
+         split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
+                 begin,end,
+                 n,
+                 range_to_ptr_type(out,insert_count),
+                 split_option);
+      else
+         split_n(multiple_char_delimiter_predicate(delimiters),
+                 begin,end,
+                 n,
+                 range_to_ptr_type(out,insert_count),
+                 split_option);
+      return insert_count;
    }
 
    template <typename InputIterator,
@@ -8627,19 +8773,7 @@ namespace strtk
                               Sequence<T,Allocator>& sequence,
                               const split_options::type& split_option = split_options::compress_delimiters)
    {
-      typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
-      if (1 == delimiters.size())
-         return split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
-                        range.first,range.second,
-                        n,
-                        range_to_type_back_inserter(sequence),
-                        split_option);
-      else
-         return split_n(multiple_char_delimiter_predicate(delimiters),
-                        range.first,range.second,
-                        n,
-                        range_to_type_back_inserter(sequence),
-                        split_option);
+      return parse(range.first,range.second,delimiters,n,sequence,split_option);
    }
 
    template <typename InputIterator,
@@ -8652,19 +8786,7 @@ namespace strtk
                               std::set<T,Comparator,Allocator>& set,
                               const split_options::type& split_option = split_options::compress_delimiters)
    {
-      typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
-      if (1 == delimiters.size())
-         return split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
-                        range.first,range.second,
-                        n,
-                        range_to_type_inserter(set),
-                        split_option);
-      else
-         return split_n(multiple_char_delimiter_predicate(delimiters),
-                        range.first,range.second,
-                        n,
-                        range_to_type_inserter(set),
-                        split_option);
+      return parse(range.first,range.second,delimiters,n,set,split_option);
    }
 
    template <typename InputIterator,
@@ -8677,19 +8799,7 @@ namespace strtk
                               std::multiset<T,Comparator,Allocator>& multiset,
                               const split_options::type& split_option = split_options::compress_delimiters)
    {
-      typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
-      if (1 == delimiters.size())
-         return split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
-                        range.first,range.second,
-                        n,
-                        range_to_type_inserter(multiset),
-                        split_option);
-      else
-         return split_n(multiple_char_delimiter_predicate(delimiters),
-                        range.first,range.second,
-                        n,
-                        range_to_type_inserter(multiset),
-                        split_option);
+      return parse(range.first,range.second,delimiters,n,multiset,split_option);
    }
 
    template <typename InputIterator,
@@ -8701,19 +8811,7 @@ namespace strtk
                               std::queue<T,Container>& queue,
                               const split_options::type& split_option = split_options::compress_delimiters)
    {
-      typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
-      if (1 == delimiters.size())
-         return split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
-                        range.first,range.second,
-                        n,
-                        range_to_type_push_inserter(queue),
-                        split_option);
-      else
-         return split_n(multiple_char_delimiter_predicate(delimiters),
-                        range.first,range.second,
-                        n,
-                        range_to_type_push_inserter(queue),
-                        split_option);
+      return parse(range.first,range.second,delimiters,n,queue,split_option);
    }
 
    template <typename InputIterator,
@@ -8725,19 +8823,7 @@ namespace strtk
                               std::stack<T,Container>& stack,
                               const split_options::type& split_option = split_options::compress_delimiters)
    {
-      typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
-      if (1 == delimiters.size())
-         return split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
-                        range.first,range.second,
-                        n,
-                        range_to_type_push_inserter(stack),
-                        split_option);
-      else
-         return split_n(multiple_char_delimiter_predicate(delimiters),
-                        range.first,range.second,
-                        n,
-                        range_to_type_push_inserter(stack),
-                        split_option);
+      return parse(range.first,range.second,delimiters,n,stack,split_option);
    }
 
    template <typename InputIterator,
@@ -8750,19 +8836,7 @@ namespace strtk
                               std::priority_queue<T,Container,Comparator>& priority_queue,
                               const split_options::type& split_option = split_options::compress_delimiters)
    {
-      typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
-      if (1 == delimiters.size())
-         return split_n(single_delimiter_predicate<std::string::value_type>(delimiters[0]),
-                        range.first,range.second,
-                        n,
-                        range_to_type_push_inserter(priority_queue),
-                        split_option);
-      else
-         return split_n(multiple_char_delimiter_predicate(delimiters),
-                        range.first,range.second,
-                        n,
-                        range_to_type_push_inserter(priority_queue),
-                        split_option);
+      return parse(range.first,range.second,delimiters,n,priority_queue,split_option);
    }
 
    template <typename T1, typename T2, typename T3, typename  T4,
@@ -9296,6 +9370,21 @@ namespace strtk
                      delimiters,
                      n,
                      priority_queue,
+                     split_option);
+   }
+
+   template <typename T>
+   inline std::size_t parse_n(const std::string& data,
+                              const std::string& delimiters,
+                              const std::size_t& n,
+                              T* out,
+                              const split_options::type& split_option = split_options::compress_delimiters)
+   {
+      return parse_n(data.data(),
+                     data.data() + data.size(),
+                     delimiters,
+                     n,
+                     out,
                      split_option);
    }
 
@@ -10697,6 +10786,7 @@ namespace strtk
       }
 
    private:
+
       unsigned char table_[256];
    };
 
@@ -10807,6 +10897,8 @@ namespace strtk
 
    class uniform_real_rng
    {
+   private:
+
       typedef boost::mt19937 rng_type;
       typedef boost::variate_generator<rng_type, boost::uniform_real<double> > variate_type;
 
@@ -11228,6 +11320,7 @@ namespace strtk
          }
 
       private:
+
          inline bound_range& operator=(const bound_range&);
 
          Function f_;
@@ -11252,6 +11345,7 @@ namespace strtk
          }
 
       private:
+
          inline bound_range_conditional& operator=(const bound_range_conditional&);
 
          Function f_;
@@ -11307,7 +11401,7 @@ namespace strtk
       {
       public:
 
-         n_choose_k_impl(value_type* table,const value_type& dimension)
+         n_choose_k_impl(value_type* table, const value_type& dimension)
          : table_(table),
            dimension_(dimension / 2)
          {}
@@ -11341,7 +11435,6 @@ namespace strtk
          {
             return *this;
          }
-
       };
 
       static const std::size_t static_table_dim = 100;
@@ -12352,7 +12445,7 @@ namespace strtk
       }
 
       template <int N, typename T, typename Iterator>
-      inline void numeric_convert(Iterator itr, T& t,const bool digit_check = false)
+      inline void numeric_convert(Iterator itr, T& t, const bool digit_check = false)
       {
          typedef typename strtk::details::is_valid_iterator<Iterator>::type itr_type;
          if (digit_check)
@@ -12368,7 +12461,7 @@ namespace strtk
       }
 
       template <int N, typename T>
-      inline void numeric_convert(const std::string& s, T& t,const bool digit_check = false)
+      inline void numeric_convert(const std::string& s, T& t, const bool digit_check = false)
       {
          numeric_convert<N,T,const char*>(s.data(),t,digit_check);
       }
@@ -12532,6 +12625,7 @@ namespace strtk
          class marker
          {
          private:
+
             typedef std::pair<std::size_t,char*> mark_type;
 
          public:
@@ -12552,6 +12646,7 @@ namespace strtk
             }
 
          private:
+
             std::stack<mark_type> stack_;
          };
 
@@ -13329,6 +13424,7 @@ namespace strtk
             };
 
          public:
+
             typedef selector_impl<Type,typename strtk::details::is_pod<Type>::result_t> type;
          };
 
@@ -13463,10 +13559,10 @@ namespace strtk
    class hex_to_number_sink
    {
       // static_assert for T either int or unsigned int and alike (could use a concept)
-      class hex_value_check
-      {
-      public:
+   private:
 
+      struct hex_value_check
+      {
          inline bool operator()(const unsigned char c) const
          {
             return (('0' <= c) && (c <= '9')) ||
@@ -13507,7 +13603,7 @@ namespace strtk
          if ((size > 2) && ((*s.first) == '0') && (((*(s.first + 1)) == 'x') || ((*(s.first + 1)) == 'X')))
             offset = 2;
          if ((size - offset) > (2 * sizeof(T)))
-               return (*this);
+            return (*this);
 
          const std::size_t buffer_size = 2 * sizeof(T);
          const std::size_t buffer_offset = ((size - offset) % 2);
@@ -13563,10 +13659,8 @@ namespace strtk
       // static_assert for T either int or unsigned int and alike (could use a concept)
    private:
 
-      class base64_value_check
+      struct base64_value_check
       {
-      public:
-
          inline bool operator()(const unsigned char c) const
          {
             return (('0' <= c) && (c <= '9')) ||
@@ -17468,7 +17562,7 @@ namespace strtk
             return false;
       }
 
-      inline bool condition_notequal(const itr_type begin,const itr_type end) const
+      inline bool condition_notequal(const itr_type begin, const itr_type end) const
       {
          if (s.size() == static_cast<std::size_t>(std::distance(begin,end)))
          {
@@ -18838,7 +18932,6 @@ namespace strtk
          T t_;
          T prev_t_;
          bool initialised_;
-
       };
 
       inline bool operator==(const char* s, const attribute<std::string>& attrib)
@@ -19627,7 +19720,7 @@ namespace strtk
          sequence.push_back(v1);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::set<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2, const T& v3, const T& v4,
                             const T& v5, const T& v6, const T& v7, const T& v8,
@@ -19640,7 +19733,7 @@ namespace strtk
          set.insert(v9); set.insert(v10);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::set<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2, const T& v3, const T& v4,
                             const T& v5, const T& v6, const T& v7, const T& v8,
@@ -19653,7 +19746,7 @@ namespace strtk
          set.insert(v9);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::set<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2, const T& v3, const T& v4,
                             const T& v5, const T& v6, const T& v7, const T& v8)
@@ -19664,7 +19757,7 @@ namespace strtk
          set.insert(v7);  set.insert(v8);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::set<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2, const T& v3, const T& v4,
                             const T& v5, const T& v6, const T& v7)
@@ -19675,7 +19768,7 @@ namespace strtk
          set.insert(v7);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::set<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2, const T& v3, const T& v4,
                             const T& v5, const T& v6)
@@ -19685,7 +19778,7 @@ namespace strtk
          set.insert(v5);  set.insert(v6);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::set<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2, const T& v3, const T& v4,
                             const T& v5)
@@ -19695,7 +19788,7 @@ namespace strtk
          set.insert(v5);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::set<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2, const T& v3, const T& v4)
       {
@@ -19703,7 +19796,7 @@ namespace strtk
          set.insert(v3);  set.insert(v4);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::set<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2, const T& v3)
       {
@@ -19711,21 +19804,21 @@ namespace strtk
          set.insert(v3);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::set<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2)
       {
          set.insert(v1);  set.insert(v2);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::set<T,Comparator,Allocator>& set,
                             const T& v1)
       {
          set.insert(v1);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::multiset<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2, const T& v3, const T& v4,
                             const T& v5, const T& v6, const T& v7, const T& v8,
@@ -19738,7 +19831,7 @@ namespace strtk
          set.insert(v9); set.insert(v10);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::multiset<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2, const T& v3, const T& v4,
                             const T& v5, const T& v6, const T& v7, const T& v8,
@@ -19751,7 +19844,7 @@ namespace strtk
          set.insert(v9);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::multiset<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2, const T& v3, const T& v4,
                             const T& v5, const T& v6, const T& v7, const T& v8)
@@ -19762,7 +19855,7 @@ namespace strtk
          set.insert(v7);  set.insert(v8);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::multiset<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2, const T& v3, const T& v4,
                             const T& v5, const T& v6, const T& v7)
@@ -19773,7 +19866,7 @@ namespace strtk
          set.insert(v7);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::multiset<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2, const T& v3, const T& v4,
                             const T& v5, const T& v6)
@@ -19783,7 +19876,7 @@ namespace strtk
          set.insert(v5);  set.insert(v6);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::multiset<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2, const T& v3, const T& v4,
                             const T& v5)
@@ -19793,7 +19886,7 @@ namespace strtk
          set.insert(v5);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::multiset<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2, const T& v3, const T& v4)
       {
@@ -19801,7 +19894,7 @@ namespace strtk
          set.insert(v3);  set.insert(v4);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::multiset<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2, const T& v3)
       {
@@ -19809,14 +19902,14 @@ namespace strtk
          set.insert(v3);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::multiset<T,Comparator,Allocator>& set,
                             const T& v1, const T& v2)
       {
          set.insert(v1);  set.insert(v2);
       }
 
-      template <typename T, typename Allocator, typename Comparator>
+      template <typename T, typename Comparator, typename Allocator>
       inline void push_back(std::multiset<T,Comparator,Allocator>& set,
                             const T& v1)
       {
@@ -20236,6 +20329,7 @@ namespace strtk
             }
 
          private:
+
             pair_token_processor operator=(const pair_token_processor&);
 
             parser<KeyValueMap>& parser_;
@@ -20254,6 +20348,7 @@ namespace strtk
       class uintkey_map
       {
       private:
+
          typedef unsigned char char_type;
          typedef strtk::keyvalue::options<char_type> general_options;
 
