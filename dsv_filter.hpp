@@ -250,7 +250,7 @@ private:
    {
       static const std::string string_id ("_s");
       static const std::string number_id ("_n");
-      expression_.get_symbol_table()->clear();
+      expression_.get_symbol_table().clear();
       column_.clear();
       column_.resize(grid_.row(0).size());
       strtk::token_grid::row_type row = grid_.row(0);
