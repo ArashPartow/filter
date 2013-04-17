@@ -19407,32 +19407,35 @@ namespace strtk
                     (~((hash << 11) + (i2 ^ (hash >> 5))));
                remaining_length -= 8;
             }
-            while (remaining_length >= 4)
-            {
-               const unsigned int& i = *(reinterpret_cast<const unsigned int*>(itr));
-               if (loop & 0x01)
-                  hash ^=    (hash <<  7) ^  i * (hash >> 3);
-               else
-                  hash ^= (~((hash << 11) + (i ^ (hash >> 5))));
-               ++loop;
-               remaining_length -= 4;
-               itr += sizeof(unsigned int);
-            }
-            while (remaining_length >= 2)
-            {
-               const unsigned short& i = *(reinterpret_cast<const unsigned short*>(itr));
-               if (loop & 0x01)
-                  hash ^=    (hash <<  7) ^  i * (hash >> 3);
-               else
-                  hash ^= (~((hash << 11) + (i ^ (hash >> 5))));
-               ++loop;
-               remaining_length -= 2;
-               itr += sizeof(unsigned short);
-            }
             if (remaining_length)
-               hash += ((*itr) ^ (hash * 0x5A5A5A5A));
-            else if (loop < 2)
-               hash += ((hash + 1) * 0x5A5A5A5A);
+            {
+               if (remaining_length >= 4)
+               {
+                  const unsigned int& i = *(reinterpret_cast<const unsigned int*>(itr));
+                  if (loop & 0x01)
+                     hash ^=    (hash <<  7) ^  i * (hash >> 3);
+                  else
+                     hash ^= (~((hash << 11) + (i ^ (hash >> 5))));
+                  ++loop;
+                  remaining_length -= 4;
+                  itr += sizeof(unsigned int);
+               }
+               if (remaining_length >= 2)
+               {
+                  const unsigned short& i = *(reinterpret_cast<const unsigned short*>(itr));
+                  if (loop & 0x01)
+                     hash ^=    (hash <<  7) ^  i * (hash >> 3);
+                  else
+                     hash ^= (~((hash << 11) + (i ^ (hash >> 5))));
+                  ++loop;
+                  remaining_length -= 2;
+                  itr += sizeof(unsigned short);
+               }
+               if (remaining_length)
+               {
+                  hash += ((*itr) ^ (hash * 0xA5A5A5A5)) + loop;
+               }
+            }
             return hash;
          }
 
