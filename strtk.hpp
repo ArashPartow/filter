@@ -15803,7 +15803,7 @@ namespace strtk
       template<> struct supported_conversion_to_type<strtk::details::conv_to_ucase_impl> { typedef ucase_type_tag type; };
       template<> struct supported_iterator_type<strtk::details::conv_to_ucase_impl>      { enum { value = true }; };
 
-      #define strtk_register_fractint_type_tag(T)\
+      #define strtk_register_truncint_type_tag(T)\
       template<> struct supported_conversion_to_type<strtk::truncated_int<T> > { typedef truncint_type_tag type; };\
       template<> struct supported_iterator_type<strtk::truncated_int<T> >      { enum { value = true }; };
 
@@ -15974,14 +15974,23 @@ namespace strtk
       strtk_register_trim_type_tag(unsigned long long int)
       strtk_register_trim_type_tag(std::string)
 
-      strtk_register_fractint_type_tag(short)
-      strtk_register_fractint_type_tag(int)
-      strtk_register_fractint_type_tag(long)
-      strtk_register_fractint_type_tag(long long)
-      strtk_register_fractint_type_tag(unsigned short)
-      strtk_register_fractint_type_tag(unsigned int)
-      strtk_register_fractint_type_tag(unsigned long)
-      strtk_register_fractint_type_tag(unsigned long long int)
+      strtk_register_trim_type_tag(truncated_int<short>)
+      strtk_register_trim_type_tag(truncated_int<int>)
+      strtk_register_trim_type_tag(truncated_int<long>)
+      strtk_register_trim_type_tag(truncated_int<long long>)
+      strtk_register_trim_type_tag(truncated_int<unsigned char>)
+      strtk_register_trim_type_tag(truncated_int<unsigned short>)
+      strtk_register_trim_type_tag(truncated_int<unsigned int>)
+      strtk_register_trim_type_tag(truncated_int<unsigned long long int>)
+
+      strtk_register_truncint_type_tag(short)
+      strtk_register_truncint_type_tag(int)
+      strtk_register_truncint_type_tag(long)
+      strtk_register_truncint_type_tag(long long)
+      strtk_register_truncint_type_tag(unsigned short)
+      strtk_register_truncint_type_tag(unsigned int)
+      strtk_register_truncint_type_tag(unsigned long)
+      strtk_register_truncint_type_tag(unsigned long long int)
 
       #define strtk_register_userdef_type_sink(T)\
       namespace strtk { namespace details { strtk_register_sink_type_tag(T) }}
@@ -15998,7 +16007,7 @@ namespace strtk
       #undef strtk_register_stl_container_to_string_conv_type_tag
       #undef strtk_register_inrange_type_tag
       #undef strtk_register_trim_type_tag
-      #undef strtk_register_fractint_type_tag
+      #undef strtk_register_truncint_type_tag
 
       template <typename T>
       struct precision
@@ -20878,8 +20887,8 @@ namespace strtk
                 typename Allocator>
       inline void clear(std::set<T,Comparator,Allocator>& set)
       {
-          std::set<T> null_set;
-          std::swap(set,null_set);
+         std::set<T> null_set;
+         std::swap(set,null_set);
       }
 
       template <typename T,
@@ -20887,22 +20896,22 @@ namespace strtk
                 typename Allocator>
       inline void clear(std::multiset<T,Comparator,Allocator>& multiset)
       {
-          std::multiset<T> null_set;
-          std::swap(multiset,null_set);
+         std::multiset<T> null_set;
+         std::swap(multiset,null_set);
       }
 
       template <typename T, typename Container>
       inline void clear(std::queue<T,Container>& queue)
       {
-          std::queue<T> null_que;
-          std::swap(queue,null_que);
+         std::queue<T> null_que;
+         std::swap(queue,null_que);
       }
 
       template <typename T, typename Container>
       inline void clear(std::stack<T,Container>& stack)
       {
-          std::stack<T> null_stack;
-          std::swap(stack,null_stack);
+         std::stack<T> null_stack;
+         std::swap(stack,null_stack);
       }
 
       template <typename T,
@@ -20910,8 +20919,8 @@ namespace strtk
                 typename Comparator>
       inline void clear(std::priority_queue<T,Container,Comparator>& priority_queue)
       {
-          std::priority_queue<T> null_pqueue;
-          std::swap(priority_queue,null_pqueue);
+         std::priority_queue<T> null_pqueue;
+         std::swap(priority_queue,null_pqueue);
       }
 
    } // namespace util
@@ -20965,10 +20974,10 @@ namespace strtk
 
          void reset()
          {
-           current_index_  = 0;
-           col_list_index_ = 0;
-           target_index_   = column_list_.index_list[0];
-           error_count_    = 0;
+            current_index_  = 0;
+            col_list_index_ = 0;
+            target_index_   = column_list_.index_list[0];
+            error_count_    = 0;
          }
 
       protected:
