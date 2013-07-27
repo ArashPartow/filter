@@ -12560,14 +12560,14 @@ namespace strtk
 
       } // namespace details
 
-      template <int N, typename Iterator>
+      template <std::size_t N, typename Iterator>
       inline bool all_digits_check(Iterator itr)
       {
          typedef typename strtk::details::is_valid_iterator<Iterator>::type itr_type;
          return details::all_digits_check_impl<Iterator,N>::process(itr);
       }
 
-      template <int N, typename Iterator>
+      template <std::size_t N>
       inline bool all_digits_check(const std::string& s)
       {
          return all_digits_check<N,const char*>(s.data());
@@ -12613,7 +12613,7 @@ namespace strtk
          return all_digits_check(s.size(),s.data());
       }
 
-      template <int N, typename Iterator>
+      template <std::size_t N, typename Iterator>
       inline bool signed_all_digits_check(Iterator itr)
       {
          if (('-' == (*itr)) || ('+' == (*itr)))
@@ -12631,7 +12631,7 @@ namespace strtk
             return all_digits_check(n,itr);
       }
 
-      template <int N>
+      template <std::size_t N>
       inline bool signed_all_digits_check(const std::string& s)
       {
          return signed_all_digits_check<N,const char*>(s.data());
@@ -12648,7 +12648,7 @@ namespace strtk
          return signed_all_digits_check(s.size(),s.data());
       }
 
-      template <int N, typename T, typename Iterator>
+      template <std::size_t N, typename T, typename Iterator>
       inline void numeric_convert(Iterator itr, T& t, const bool digit_check = false)
       {
          typedef typename strtk::details::is_valid_iterator<Iterator>::type itr_type;
@@ -12664,7 +12664,7 @@ namespace strtk
          details::numeric_convert_impl<T,Iterator,N>::process(itr,t);
       }
 
-      template <int N, typename T>
+      template <std::size_t N, typename T>
       inline void numeric_convert(const std::string& s, T& t, const bool digit_check = false)
       {
          numeric_convert<N,T,const char*>(s.data(),t,digit_check);
@@ -12715,7 +12715,7 @@ namespace strtk
          numeric_convert(s.size(),s.data(),t,digit_check);
       }
 
-      template <int N, typename T, typename Iterator>
+      template <std::size_t N, typename T, typename Iterator>
       inline void signed_numeric_convert(Iterator itr, T& t, const bool digit_check = false)
       {
          if ('-' == (*itr))
@@ -12752,7 +12752,7 @@ namespace strtk
             return numeric_convert(n,itr,t,digit_check);
       }
 
-      template <int N, typename T>
+      template <std::size_t N, typename T>
       inline void signed_numeric_convert(const std::string& s,
                                          T& t,
                                          const bool digit_check = false)
@@ -14584,7 +14584,6 @@ namespace strtk
 
    namespace details
    {
-
       template <typename Iterator>
       struct range_type
       {
@@ -15510,7 +15509,6 @@ namespace strtk
          unsigned char* data_;
          std::size_t size_;
       };
-
    }
 
    inline details::expect_impl expect(const std::string& s)
@@ -18610,12 +18608,12 @@ namespace strtk
       }
 
       template <typename Iterator>
-      bool operator()(const Iterator begin, const Iterator end)
+      inline bool operator()(const Iterator begin, const Iterator end)
       {
          return ((*this).*condition_method_)(begin,end);
       }
 
-      bool operator()(const std::string& str)
+      inline bool operator()(const std::string& str)
       {
          return operator()(reinterpret_cast<const unsigned char*>(str.data()),
                            reinterpret_cast<const unsigned char*>(str.data() + str.size()));
