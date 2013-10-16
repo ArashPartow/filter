@@ -147,8 +147,8 @@ public:
          return false;
       }
 
-      // Only extract for processing, the column values for that are
-      // being actively used in the current expression.
+      // Only extract for processing, the column values
+      // that are being used in the current expression.
       std::deque<std::string> symbol;
       parser_.expression_symbols(symbol);
       for (std::size_t i = 0; i < column_.size(); ++i)
@@ -268,7 +268,7 @@ private:
             error_ = "Error: Redefinition of column " + col_name;
             return false;
          }
-         else if (strtk::ends_with("_s",col_suffix) || strtk::ends_with("_S",col_suffix))
+         else if (strtk::iends_with("_s",col_suffix))
          {
             column.type    = dsv_filter::column_properties::e_string;
             column.name    = col_name;
@@ -276,7 +276,7 @@ private:
             column.process = true;
             symbol_table_.add_stringvar(col_name,column.value_s);
          }
-         else if (strtk::ends_with("_n",col_suffix) || strtk::ends_with("_N",col_suffix))
+         else if (strtk::iends_with("_n",col_suffix))
          {
             column.type    = dsv_filter::column_properties::e_number;
             column.name    = col_name;

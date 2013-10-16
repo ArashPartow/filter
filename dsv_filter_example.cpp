@@ -17,45 +17,61 @@
 
 
 /*
-  Description: The following is a very simple driver demonstrating the
-  capabilities of the DSV Filter library. The example is capable of loading
-  a CSV or DSV flat text file into memory, and then outputting a subset of
-  rows based on a user provided filter expression.
-  It is necessary for the first line of the input file to be a header line,
-  which uniquely names each of the columns. If a column is to be used within
-  expressions, then the name of the column must end in either an "_n" or "_s"
-  denoting the type of the column as being a number or string respectively.
-  Furthermore the driver supports selectively choosing which columns to output
-  upon a successful filter of row or simply to output the number of rows
-  that have matched the filter expression.
+  Description:
 
-  Example Filter 1: col3 == (col2 + col6) or col5 > col1
+  The following is a  simple driver demonstrating the  capabilities
+  of the DSV  Filter library. The  example is capable  of loading a
+  CSV or  DSV flat  text file  into memory,  and then  outputting a
+  subset of rows based on a user specified filter expression.
 
-  Explanation: For each row/tuple select for output where the value of col3
-  is equal to the sum of the values of col2 and col6 or if the value of col5
-  is greater than col1.
+  It is required that the first line of the input file be a  header
+  line, which uniquely names each of the columns. If a column is to
+  be used within expressions, then the name of the column must  end
+  in either  an "_n"  or "_s"  denoting the  type of  the column as
+  being either a number or string respectively.
+
+  Furthermore  the  driver  supports  selectively  choosing   which
+  columns to output upon successfully filtering  a row or simply to
+  output the number of rows that have matched the specified  filter
+  expression.
+
+  Example Filter 1:
+
+          col3 == (col2 + col6) or col5 > col1
+
+  Explanation:
+  For each row/tuple select for output where the value of col3 is
+  equal to the sum of the values of col2 and col6 or if the value
+  of col5 is greater than col1.
 
 
-  Example Filter 2: select col1,col8 | col3 > col2 + col6
+  Example Filter 2:
 
-  Explanation: For each row, select the columns named col1 and col8 for
-  output where the value for col3 is greater than the sum of the values
+          select col1,col8 | col3 > col2 + col6
+
+  Explanation:
+  For each row, select the columns named col1 and col8 for output
+  where the value for col3 is greater than the sum of the values
   of col2 and col6.
 
 
-  Example Filter 3: count | col3 <= (col2 - col6) and 'Grape' in col7
+  Example Filter 3:
 
-  Explanation: Return the number of rows where the value for col3 is less
-  than or equal to the difference of the values between col2 and col6 and
-  where the string 'Grape' appears in col7.
+          count | col3 <= (col2 - col6) and 'Grape' in col7
 
+  Explanation:
+  Return the number of rows where the value for col3 is less than
+  or equal to the difference of the values between col2 and col6
+  and where the string 'Grape' appears in col7.
 
-  It should be noted that when declaring an expression or select list,
-  that the column names are not case sensitive. Furthermore they should
-  not include the "_s" or "_n" suffixes.
-  The pipe symbol "|", indicates the separation of the select or count
-  clause from the where-clause which defines the filter expression upon
-  which every row will be evaluated against.
+  It should be  noted that when  declaring an expression  or select
+  list, that the column  names are not case  sensitive. Furthermore
+  they should not include the "_s" or "_n" suffixes.
+
+  The pipe symbol  "|"  indicates the  separation of the  select or
+  count  clause  from  the where-clause  which  defines  the filter
+  expression upon which every row will be evaluated against.
+
 
   Typical Usage:
 
@@ -244,16 +260,30 @@ void display_columns(const dsv_filter& filter)
       std::cout << "No valid columns available.\n";
    else
    {
+      std::cout << "+--+----------------+---------+\n";
+      std::cout << "|# |      Name      |   Type  |\n";
+      std::cout << "+--+----------------+---------+\n";
+      std::size_t length = 0;
+
       for (std::size_t i = 0; i < filter.column_count(); ++i)
       {
          const dsv_filter::column_properties& column = filter.column(i);
+         length = std::max(length,column.name.size());
+      }
+
+      for (std::size_t i = 0; i < filter.column_count(); ++i)
+      {
+         const dsv_filter::column_properties& column = filter.column(i);
+         std::cout << "|" << strtk::text::right_align(2,'0',i) << "| "
+                   << strtk::text::left_align(length,column.name);
          switch (column.type)
          {
-            case dsv_filter::column_properties::e_string : std::cout << column.name << " [STRING]\n"; break;
-            case dsv_filter::column_properties::e_number : std::cout << column.name << " [NUMBER]\n"; break;
-            default : break;
+            case dsv_filter::column_properties::e_string : std::cout << " | STRING  |\n"; break;
+            case dsv_filter::column_properties::e_number : std::cout << " | NUMBER  |\n"; break;
+            default                                      : std::cout << " | UNKNOWN |\n"; break;
          }
       }
+      std::cout << "+--+----------------+---------+\n";
    }
 }
 
@@ -445,11 +475,11 @@ void information(const dsv_filter& filter)
    std::cout << "\n";
    std::cout << "Information\n";
    std::cout << "-----------\n";
-   std::cout << "File:             " << filter.file_name() << "\n";
-   std::cout << "Rows:             " << filter.row_count() << "\n";
+   std::cout << "File:             " << filter.file_name()    << "\n";
+   std::cout << "Rows:             " << filter.row_count()    << "\n";
    std::cout << "Columns:          " << filter.column_count() << "\n";
    std::cout << "Elements:         " << filter.row_count() * filter.column_count() << "\n";
-   std::cout << "Input Delimiter:  " << filter.input_delimiter() << "\n";
+   std::cout << "Input Delimiter:  " << filter.input_delimiter()  << "\n";
    std::cout << "Output Delimiter: " << filter.output_delimiter() << "\n";
    std::cout << "\n";
 }
