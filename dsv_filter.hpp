@@ -183,7 +183,7 @@ public:
       {
          strtk::build_string s;
          s << "Error: row[" << r << "] out of bounds.";
-         error_ = s.as_string();
+         error_ = s.to_str();
          return false;
       }
       if (row_.index() != r)
@@ -232,7 +232,7 @@ public:
          {
             strtk::build_string s;
             s << "Error: Failed to process element at row/col["<< r << "," << c << "]  value:" << row_.get<std::string>(c);
-            error_ = s.as_string();
+            error_ = s.to_str();
             return e_error;
          }
       }

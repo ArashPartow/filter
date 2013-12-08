@@ -1257,8 +1257,9 @@ namespace strtk
 
    namespace details
    {
-      #if (defined(__MINGW32_VERSION)) ||\
-          (defined(__APPLE__) && (__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ < 1070)) ||\
+      #if (defined(__MINGW32_VERSION)) ||                                                   \
+          (defined(__CYGWIN__) || defined(__CYGWIN32__)) ||                                 \
+          (defined(__APPLE__) && (__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ < 1070)) || \
           (defined(_WIN32) && (_MSC_VER < 1400))
          inline std::size_t strnlength(const char* s, const std::size_t& n)
          {
@@ -16948,19 +16949,19 @@ namespace strtk
       template <typename T>
       inline bool type_to_string_converter_impl(T value, std::string& result, unsigned_type_tag)
       {
-         const std::size_t radix = 10;
-         const std::size_t radix_sqr = radix * radix;
-         const std::size_t radix_cube = radix * radix * radix;
-         unsigned char buffer[numeric<T>::size + 16];
-         unsigned char* itr = buffer + numeric<T>::size;
+         static const std::size_t radix = 10;
+         static const std::size_t radix_sqr = radix * radix;
+         static const std::size_t radix_cube = radix * radix * radix;
+         static const std::size_t buffer_size = ((strtk::details::numeric<T>::size < 16) ? 16 : 32);
+         unsigned char buffer[buffer_size];
+         unsigned char* itr = buffer + buffer_size;
 
-         if (0 != value)
+         if (value)
          {
-            T temp_v = 0;
             while (value >= static_cast<T>(radix_sqr))
             {
                itr -= 3;
-               temp_v = value / radix_cube;
+               T temp_v = value / radix_cube;
                memcpy(itr,&details::rev_3digit_lut[3 * (value - (temp_v * radix_cube))],3);
                value = temp_v;
             }
@@ -16968,12 +16969,12 @@ namespace strtk
             while (value >= static_cast<T>(radix))
             {
                itr -= 2;
-               temp_v = value / radix_sqr;
+               T temp_v = value / radix_sqr;
                memcpy(itr,&details::rev_2digit_lut[2 * (value - (temp_v * radix_sqr))],2);
                value = temp_v;
             }
 
-            if (0 != value)
+            if (value)
             {
                *(--itr) = static_cast<unsigned char>('0' + value);
             }
@@ -16981,34 +16982,46 @@ namespace strtk
          else
             *(--itr) = '0';
 
-         result.assign(reinterpret_cast<char*>(itr), (buffer + numeric<T>::size) - itr);
+         result.assign(reinterpret_cast<char*>(itr), (buffer + buffer_size) - itr);
          return true;
       }
 
       template <typename T>
-      inline bool type_to_string_converter_impl(T value, std::string& result, strtk::details::signed_type_tag)
-      {
-         const std::size_t radix = 10;
-         const std::size_t radix_sqr = radix * radix;
-         const std::size_t radix_cube = radix * radix * radix;
-         unsigned char buffer[strtk::details::numeric<T>::size + 16];
-         unsigned char* itr = buffer + strtk::details::numeric<T>::size;
-         const bool inc_final_digit = (value == std::numeric_limits<T>::min());
-         if (inc_final_digit)
-         {
-            value += 1;
-         }
-         const bool negative = (value < 0);
-         if (negative)
-            value = static_cast<T>(-value);
+      struct tsci_type {};
 
-         if (0 != value)
+      #define define_tsci_type(Type,ReType) \
+      template <>                                      \
+      struct tsci_type<Type>                           \
+      {                                                \
+         typedef ReType  type;                         \
+      };                                               \
+
+      define_tsci_type(short    ,unsigned short    )
+      define_tsci_type(int      ,unsigned int      )
+      define_tsci_type(long     ,unsigned long     )
+      define_tsci_type(long long,unsigned long long)
+
+      #undef define_tsci_type
+
+      template <typename T>
+      inline bool type_to_string_converter_impl(T valuex, std::string& result, signed_type_tag)
+      {
+         static const std::size_t radix = 10;
+         static const std::size_t radix_sqr   = radix * radix;
+         static const std::size_t radix_cube  = radix * radix * radix;
+         static const std::size_t buffer_size = ((strtk::details::numeric<T>::size < 16) ? 16 : 32);
+         unsigned char buffer[buffer_size];
+         unsigned char* itr = buffer + buffer_size;
+         bool negative = (valuex < 0);
+         typedef typename tsci_type<T>::type TT;
+         TT value = (negative) ? -valuex : valuex;
+
+         if (value)
          {
-            T temp_v = 0;
             while (value >= static_cast<T>(radix_sqr))
             {
                itr -= 3;
-               temp_v = value / radix_cube;
+               T temp_v = value / radix_cube;
                memcpy(itr,&details::rev_3digit_lut[3 * (value - (temp_v * radix_cube))],3);
                value = temp_v;
             }
@@ -17016,27 +17029,25 @@ namespace strtk
             while (value >= static_cast<T>(radix))
             {
                itr -= 2;
-               temp_v = value / radix_sqr;
+               T temp_v = value / radix_sqr;
                memcpy(itr,&details::rev_2digit_lut[2 * (value - (temp_v * radix_sqr))],2);
                value = temp_v;
             }
 
-            if (0 != value)
+            if (value)
             {
                *(--itr) = static_cast<unsigned char>('0' + value);
             }
 
-            if (inc_final_digit)
+            if (negative)
             {
-               buffer[strtk::details::numeric<T>::size - 1] += 1;
+               *(--itr) = '-';
             }
          }
          else
             *(--itr) = '0';
 
-         if (negative) *(--itr) = '-';
-
-         result.assign(reinterpret_cast<char*>(itr),(buffer + numeric<T>::size) - itr);
+         result.assign(reinterpret_cast<char*>(itr), (buffer + buffer_size) - itr);
          return true;
       }
 
