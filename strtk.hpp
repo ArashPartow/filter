@@ -2,7 +2,7 @@
  *****************************************************************
  *                     String Toolkit Library                    *
  *                                                               *
- * Author: Arash Partow (2002-2013)                              *
+ * Author: Arash Partow (2002-2014)                              *
  * URL: http://www.partow.net/programming/strtk/index.html       *
  *                                                               *
  * Copyright notice:                                             *
@@ -3154,6 +3154,46 @@ namespace strtk
 
    } // namespace split_options
 
+   namespace details
+   {
+      template <typename DelimiterPredicate,
+                typename Iterator,
+                typename OutputIterator>
+      inline std::size_t split_compress_delimiters(const DelimiterPredicate& delimiter,
+                                                   const Iterator begin,
+                                                   const Iterator end,
+                                                   OutputIterator out)
+      {
+         std::size_t token_count = 0;
+         std::pair<Iterator,Iterator> range(begin,begin);
+
+         while (end != range.second)
+         {
+            if (delimiter(*range.second))
+            {
+               (*out) = range;
+               ++out;
+               while ((end != ++range.second) && delimiter(*range.second));
+               range.first = range.second;
+               if (end != range.second)
+                  ++range.second;
+               ++token_count;
+            }
+            else
+               ++range.second;
+         }
+
+         if ((range.first != range.second) || delimiter(*(range.second - 1)))
+         {
+            (*out) = range;
+            ++out;
+            ++token_count;
+         }
+
+         return token_count;
+      }
+   }
+
    template <typename DelimiterPredicate,
              typename Iterator,
              typename OutputIterator>
@@ -3164,12 +3204,18 @@ namespace strtk
                             const split_options::type split_option = split_options::default_mode)
    {
       if (begin == end) return 0;
-      std::size_t token_count = 0;
-      std::pair<Iterator,Iterator> range(begin,begin);
       const bool compress_delimiters = split_options::perform_compress_delimiters(split_option);
       const bool include_1st_delimiter = split_options::perform_include_1st_delimiter(split_option);
       const bool include_all_delimiters = (!include_1st_delimiter) && split_options::perform_include_all_delimiters(split_option);
       const bool include_delimiters = include_1st_delimiter || include_all_delimiters;
+
+      if (compress_delimiters && (!include_delimiters))
+      {
+         return details::split_compress_delimiters(delimiter,begin,end,out);
+      }
+
+      std::size_t token_count = 0;
+      std::pair<Iterator,Iterator> range(begin,begin);
 
       while (end != range.second)
       {
@@ -3190,9 +3236,6 @@ namespace strtk
             {
                (*out) = range;
                ++out;
-               if (compress_delimiters)
-                  while ((end != (++range.second)) && delimiter(*range.second)) ;
-               else
                   ++range.second;
             }
             ++token_count;
@@ -5222,19 +5265,22 @@ namespace strtk
            column_split_option(split_options::compress_delimiters),
            row_delimiters("\n\r"),
            column_delimiters(",|;\t "),
-           support_dquotes(false)
+           support_dquotes(false),
+           trim_dquotes(false)
          {}
 
          options(split_options::type sro,
                  split_options::type sco,
                  const std::string& rd,
                  const std::string& cd,
-                 const bool support_dq = false)
+                 const bool support_dq = false,
+                 const bool trim_dq = false)
          : row_split_option(sro),
            column_split_option(sco),
            row_delimiters(rd),
            column_delimiters(cd),
-           support_dquotes(support_dq)
+           support_dquotes(support_dq),
+           trim_dquotes(trim_dq)
          {}
 
          inline options& set_column_split_option(const split_options::type& option)
@@ -5266,6 +5312,7 @@ namespace strtk
          std::string row_delimiters;
          std::string column_delimiters;
          bool support_dquotes;
+         bool trim_dquotes;
       };
 
       class row_type
@@ -6962,7 +7009,7 @@ namespace strtk
             if ('"' == c)
             {
                in_bracket_range_ = !in_bracket_range_;
-               return true;
+               return false;
             }
             else if (in_bracket_range_)
                return false;
@@ -7008,6 +7055,21 @@ namespace strtk
                          strtk::functional_inserter(
                             row_processor<double_quotes_predicate>(dsv_index_,token_predicate_dblq,options_.column_split_option)),
                         strtk::split_options::compress_delimiters);
+
+            if (options_.trim_dquotes)
+            {
+               for (std::size_t i = 0; i < dsv_index_.token_list.size(); ++i)
+               {
+                  if (
+                      ((*(dsv_index_.token_list[i].first     )) == '"') &&
+                      ((*(dsv_index_.token_list[i].second - 1)) == '"')
+                     )
+                  {
+                      ++dsv_index_.token_list[i].first;
+                      --dsv_index_.token_list[i].second;
+                  }
+               }
+            }
          }
          update_minmax_columns();
          return true;
@@ -12887,7 +12949,7 @@ namespace strtk
             return static_cast<int>(convert(static_cast<unsigned int>(v)));
          }
 
-         static inline unsigned long long int convert(const long long int v)
+         static inline long long int convert(const long long int v)
          {
             return static_cast<long long>(convert(static_cast<unsigned long long int>(v)));
          }
@@ -12917,7 +12979,7 @@ namespace strtk
             return (is_little_endian()) ? convert(v) : v;
          }
 
-         static inline unsigned long long int convert_to_be(const long long int v)
+         static inline long long int convert_to_be(const long long int v)
          {
             return (is_little_endian()) ? convert(v) : v;
          }
@@ -13413,10 +13475,9 @@ namespace strtk
       public:
 
          // should be sourced from cstdint
-         // should be sourced from cstdint
-         typedef unsigned int uint32_t;
+         typedef unsigned int   uint32_t;
          typedef unsigned short uint16_t;
-         typedef unsigned char uint8_t;
+         typedef unsigned char  uint8_t;
          typedef unsigned long long int uint64_t;
 
          template <typename T>
@@ -16990,11 +17051,11 @@ namespace strtk
       struct tsci_type {};
 
       #define define_tsci_type(Type,ReType) \
-      template <>                                      \
-      struct tsci_type<Type>                           \
-      {                                                \
-         typedef ReType  type;                         \
-      };                                               \
+      template <>                           \
+      struct tsci_type<Type>                \
+      {                                     \
+         typedef ReType  type;              \
+      };                                    \
 
       define_tsci_type(short    ,unsigned short    )
       define_tsci_type(int      ,unsigned int      )
@@ -19853,6 +19914,9 @@ namespace strtk
          }
 
       private:
+
+         scoped_restore(const scoped_restore&);
+         scoped_restore& operator=(const scoped_restore&);
 
          bool restore_;
          T& reference_;
