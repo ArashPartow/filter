@@ -14,6 +14,7 @@
  ******************************************************************
 */
 
+
 #ifndef INCLUDE_DSV_FILTER_HPP
 #define INCLUDE_DSV_FILTER_HPP
 
@@ -161,6 +162,8 @@ public:
       typedef parser_t::dependent_entity_collector::symbol_t symbol_t;
 
       std::deque<symbol_t> symbol_list;
+
+      parser_.dec().symbols(symbol_list);
 
       for (std::size_t i = 0; i < column_.size(); ++i)
       {

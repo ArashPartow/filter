@@ -135,8 +135,8 @@ int main(int argc, char* argv[])
    //dsv_filter_example <dsv file name> <input delimiter>
    //dsv_filter_example <dsv file name> <input delimiter> <output delimiter>
 
-   std::string file_name = "";
-   std::string input_delimiter = "|";
+   std::string file_name        = "";
+   std::string input_delimiter  = "|";
    std::string output_delimiter = "|";
 
    if (2 == argc)
@@ -268,14 +268,17 @@ void display_columns(const dsv_filter& filter)
       for (std::size_t i = 0; i < filter.column_count(); ++i)
       {
          const dsv_filter::column_properties& column = filter.column(i);
+
          length = std::max(length,column.name.size());
       }
 
       for (std::size_t i = 0; i < filter.column_count(); ++i)
       {
          const dsv_filter::column_properties& column = filter.column(i);
+
          std::cout << "|" << strtk::text::right_align(2,'0',i) << "| "
                    << strtk::text::left_align(length,column.name);
+
          switch (column.type)
          {
             case dsv_filter::column_properties::e_string : std::cout << " | STRING  |\n"; break;
@@ -413,6 +416,7 @@ bool parse_query(std::string& query,
                {
                   selected_column_list[c] = true;
                   col_found = true;
+
                   break;
                }
             }
