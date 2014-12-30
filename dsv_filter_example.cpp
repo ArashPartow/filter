@@ -283,6 +283,7 @@ void display_columns(const dsv_filter& filter)
             default                                      : std::cout << " | UNKNOWN |\n"; break;
          }
       }
+
       std::cout << "+--+----------------+---------+\n";
    }
 }
@@ -291,19 +292,25 @@ bool load_dsv(const std::string query, dsv_filter& filter)
 {
    static strtk::ignore_token ignore;
    std::string file_name;
+
    if (!strtk::parse(query," \t",ignore,file_name))
       return true;
+
    strtk::util::timer timer;
    timer.start();
+
    if(!filter.load(file_name))
    {
       std::cout << "Failed to load: " << file_name << std::endl;
       return false;
    }
+
    timer.stop();
+
    printf("Successfully loaded: %s - Total time: %6.3fsec\n",
           file_name.c_str(),
           timer.time());
+
    return true;
 }
 
@@ -315,6 +322,7 @@ void display_history(const Sequence<std::string,Allocator>& query_history)
    {
       std::cout << strtk::text::right_align(2,'0',i) << " " << query_history[i] << std::endl;
    }
+
    std::cout << "Number of queries: " << query_history.size() << std::endl;
 }
 
@@ -332,21 +340,26 @@ void generate_results(const Sequence<bool,Allocator>& selected_column, dsv_filte
 
    std::string result;
    result.reserve(strtk::one_kilobyte);
+
    for (std::size_t r = 1; r < row_count; ++r)
    {
       filter_result = filter[r];
+
       if (dsv_filter::e_match == filter_result)
       {
          if (!count_only)
          {
             result.clear();
+
             if (!filter.row(r,selected_column,result))
             {
                std::cout << filter.error() << std::endl;
                break;
             }
+
             std::cout << result << "\n";
          }
+
          ++result_count;
       }
       else if (dsv_filter::e_error == filter_result)
@@ -355,7 +368,9 @@ void generate_results(const Sequence<bool,Allocator>& selected_column, dsv_filte
          break;
       }
    }
+
    timer.stop();
+
    std::cout << "---------------------\n";
    printf("Number of results: %d\nTime: %8.5fms\n",
           static_cast<unsigned int>(result_count),
@@ -379,14 +394,19 @@ bool parse_query(std::string& query,
       if (0 == strtk::ifind("select",sub_query[0]))
       {
          std::fill_n(selected_column_list.begin(),selected_column_list.size(),false);
+
          std::deque<std::string> selected_cols;
+
          strtk::parse(sub_query[0],", ",selected_cols);
          bool col_found = false;
+
          for (std::size_t i = 1; i < selected_cols.size(); ++i)
          {
             if (selected_cols[i].empty())
                continue;
+
             col_found = false;
+
             for (std::size_t c = 0; c < filter.column_count(); ++c)
             {
                if (strtk::imatch(selected_cols[i],filter.column(c).name))
@@ -396,12 +416,14 @@ bool parse_query(std::string& query,
                   break;
                }
             }
+
             if (!col_found)
             {
                std::cout << "Error - Invalid column: [" << selected_cols[i] << "]" << std::endl;
                return false;
             }
          }
+
          query = sub_query[1];
       }
       else if (0 == strtk::ifind("count",sub_query[0]))
@@ -416,40 +438,51 @@ bool parse_query(std::string& query,
       return false;
    else
       query = sub_query[0];
+
    return true;
 }
 
 bool set_output_delimiter(const std::string& query, dsv_filter& filter)
 {
    static const std::string preamble = "output_delimiter = ";
+
    if (0 != strtk::ifind("output_delimiter = ",query))
    {
       std::cout << "Invalid format for command. eg: output_delimiter = |" << std::endl;
       return false;
    }
+
    std::string delimiter = strtk::text::remaining_string(preamble.size(),query);
    strtk::remove_leading_trailing(" '\"",delimiter);
+
    if (delimiter.empty())
       return false;
+
    filter.set_output_delimiter(delimiter);
    std::cout << "Output delimiter set to: " << delimiter << std::endl;
+
    return true;
 }
 
 bool set_input_delimiter(const std::string& query, dsv_filter& filter)
 {
    static const std::string preamble = "input_delimiter = ";
+
    if (0 != strtk::ifind("input_delimiter = ",query))
    {
       std::cout << "Invalid format for command. eg: input_delimiter = |" << std::endl;
       return false;
    }
+
    std::string delimiter = strtk::text::remaining_string(preamble.size(),query);
    strtk::remove_leading_trailing(" '\"",delimiter);
+
    if (delimiter.empty())
       return false;
+
    filter.set_input_delimiter(delimiter);
    std::cout << "Input delimiter set to: " << delimiter << std::endl;
+
    return true;
 }
 
@@ -459,14 +492,18 @@ bool lookup_history(const Sequence<std::string,Allocator>& query_history, std::s
 {
    if (query_history.empty())
       return false;
+
    static strtk::ignore_token ignore;
    std::size_t query_index = 0;
+
    if (!strtk::parse(query," \t",ignore,query_index))
       return false;
    else if (query_index >= query_history.size())
       return false;
+
    query = query_history[query_index];
    std::cout << "Query: " << query << std::endl;
+
    return true;
 }
 
