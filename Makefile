@@ -15,7 +15,6 @@
 #
 
 
-
 COMPILER         = -c++
 #COMPILER        = -clang
 OPTIMIZATION_OPT = -O3
