@@ -19,10 +19,12 @@ http://www.opensource.org/licenses/cpl1.0.php
 All updates and the most recent version of the C++ DSV Filter Library
 can be found at:
 (1) http://www.partow.net/programming/dsvfilter/index.html
-(2) svn checkout http://dsvfilter.googlecode.com/svn/ dsvfilter
+(2) https://github.com/ArashPartow/filter
+
 
 [INSTALLATION]
-(1) exprtk.hpp should be placed in a project or system include path
+(1) The dsv_filter.hpp and associated dependent header files should
+    be placed in a project or system include path
 (e.g: /usr/include/).
 
 
@@ -33,11 +35,10 @@ can be found at:
 
 
 [COMPILER COMPATIBILITY]
-(*) GNU Compiler Collection (4.3+)
+(*) GNU Compiler Collection (4.1+)
 (*) Intel® C++ Compiler (9.x+)
 (*) Clang/LLVM (1.1+)
 (*) Microsoft Visual Studio C++ Compiler (7.1+)
-(*) Comeau C++ Compiler (4.3+)
 
 
 [FILES]
@@ -54,3 +55,4 @@ can be found at:
 Please note that the data found in the world_data.txt file may
 be out of date or generally incorrect, and should only be used
 for demonstration purposes.
+
