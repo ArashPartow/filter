@@ -225,11 +225,6 @@ public:
          }
       }
 
-      if (!row_result.empty() && row_result[row_result.size() - 1])
-      {
-         row_result.resize(row_result.size() - 1);
-      }
-
       return true;
    }
 
