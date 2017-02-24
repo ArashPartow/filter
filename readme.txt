@@ -10,9 +10,9 @@ expression on a per row basis upon the DSV store
 [COPYRIGHT NOTICE]
 Free  use  of  the  C++ DSV  Filter  Library  is  permitted under  the
 guidelines and  in accordance  with the  most current  version of  the
-Common Public License.
+MIT License.
 
-http://www.opensource.org/licenses/cpl1.0.php
+http://www.opensource.org/licenses/MIT
 
 
 [DOWNLOADS & UPDATES]
