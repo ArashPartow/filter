@@ -7901,6 +7901,197 @@ namespace strtk
    };
 
    template <typename InputIterator,
+             typename T1 , typename  T2, typename  T3, typename  T4,
+             typename T5 , typename  T6, typename  T7, typename  T8,
+             typename T9 , typename T10, typename T11, typename T12,
+             typename T13, typename T14, typename T15, typename T16>
+   inline bool parse(const InputIterator begin,
+                     const InputIterator end,
+                     const std::string& delimiters,
+                     T1&  t1 ,  T2&  t2,  T3&  t3,  T4&  t4,
+                     T5&  t5 ,  T6&  t6,  T7&  t7,  T8&  t8,
+                     T9&  t9 , T10& t10, T11& t11, T12& t12,
+                     T13& t13, T14& t14, T15& t15, T16& t16)
+   {
+      typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
+      details::convert_type_assert<itr_type>();
+      static const std::size_t token_count = 16;
+      typedef std::pair<InputIterator,InputIterator> iterator_type;
+      typedef iterator_type* iterator_type_ptr;
+      iterator_type token_list[token_count];
+
+      const std::size_t parsed_token_count = split_n(delimiters,
+                                                     begin,end,
+                                                     token_count,
+                                                     token_list,
+                                                     split_options::compress_delimiters);
+      if (token_count > parsed_token_count)
+         return false;
+
+      iterator_type_ptr itr = token_list;
+
+      #define strtk_cmpstmt(N)                                         \
+      if (!string_to_type_converter((*itr).first,(*itr).second, t##N)) \
+         return false;                                                 \
+      ++itr;                                                           \
+
+      strtk_cmpstmt( 1)
+      strtk_cmpstmt( 2)
+      strtk_cmpstmt( 3)
+      strtk_cmpstmt( 4)
+      strtk_cmpstmt( 5)
+      strtk_cmpstmt( 6)
+      strtk_cmpstmt( 7)
+      strtk_cmpstmt( 8)
+      strtk_cmpstmt( 9)
+      strtk_cmpstmt(10)
+      strtk_cmpstmt(11)
+      strtk_cmpstmt(12)
+      strtk_cmpstmt(13)
+      strtk_cmpstmt(14)
+      strtk_cmpstmt(15)
+      return string_to_type_converter((*itr).first,(*itr).second,t16);
+   }
+
+   template <typename InputIterator,
+             typename T1 , typename  T2, typename  T3, typename  T4,
+             typename T5 , typename  T6, typename  T7, typename  T8,
+             typename T9 , typename T10, typename T11, typename T12,
+             typename T13, typename T14, typename T15>
+   inline bool parse(const InputIterator begin,
+                     const InputIterator end,
+                     const std::string& delimiters,
+                     T1&  t1 ,  T2&  t2,  T3&  t3,  T4&  t4,
+                     T5&  t5 ,  T6&  t6,  T7&  t7,  T8&  t8,
+                     T9&  t9 , T10& t10, T11& t11, T12& t12,
+                     T13& t13, T14& t14, T15& t15)
+   {
+      typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
+      details::convert_type_assert<itr_type>();
+      static const std::size_t token_count = 15;
+      typedef std::pair<InputIterator,InputIterator> iterator_type;
+      typedef iterator_type* iterator_type_ptr;
+      iterator_type token_list[token_count];
+
+      const std::size_t parsed_token_count = split_n(delimiters,
+                                                     begin,end,
+                                                     token_count,
+                                                     token_list,
+                                                     split_options::compress_delimiters);
+      if (token_count > parsed_token_count)
+         return false;
+
+      iterator_type_ptr itr = token_list;
+
+      strtk_cmpstmt( 1)
+      strtk_cmpstmt( 2)
+      strtk_cmpstmt( 3)
+      strtk_cmpstmt( 4)
+      strtk_cmpstmt( 5)
+      strtk_cmpstmt( 6)
+      strtk_cmpstmt( 7)
+      strtk_cmpstmt( 8)
+      strtk_cmpstmt( 9)
+      strtk_cmpstmt(10)
+      strtk_cmpstmt(11)
+      strtk_cmpstmt(12)
+      strtk_cmpstmt(13)
+      strtk_cmpstmt(14)
+      return string_to_type_converter((*itr).first,(*itr).second,t15);
+   }
+
+   template <typename InputIterator,
+             typename T1 , typename  T2, typename  T3, typename  T4,
+             typename T5 , typename  T6, typename  T7, typename  T8,
+             typename T9 , typename T10, typename T11, typename T12,
+             typename T13, typename T14>
+   inline bool parse(const InputIterator begin,
+                     const InputIterator end,
+                     const std::string& delimiters,
+                     T1&  t1 ,  T2&  t2,  T3&  t3,  T4&  t4,
+                     T5&  t5 ,  T6&  t6,  T7&  t7,  T8&  t8,
+                     T9&  t9 , T10& t10, T11& t11, T12& t12,
+                     T13& t13, T14& t14)
+   {
+      typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
+      details::convert_type_assert<itr_type>();
+      static const std::size_t token_count = 14;
+      typedef std::pair<InputIterator,InputIterator> iterator_type;
+      typedef iterator_type* iterator_type_ptr;
+      iterator_type token_list[token_count];
+
+      const std::size_t parsed_token_count = split_n(delimiters,
+                                                     begin,end,
+                                                     token_count,
+                                                     token_list,
+                                                     split_options::compress_delimiters);
+      if (token_count > parsed_token_count)
+         return false;
+
+      iterator_type_ptr itr = token_list;
+
+      strtk_cmpstmt( 1)
+      strtk_cmpstmt( 2)
+      strtk_cmpstmt( 3)
+      strtk_cmpstmt( 4)
+      strtk_cmpstmt( 5)
+      strtk_cmpstmt( 6)
+      strtk_cmpstmt( 7)
+      strtk_cmpstmt( 8)
+      strtk_cmpstmt( 9)
+      strtk_cmpstmt(10)
+      strtk_cmpstmt(11)
+      strtk_cmpstmt(12)
+      strtk_cmpstmt(13)
+      return string_to_type_converter((*itr).first,(*itr).second,t14);
+   }
+
+   template <typename InputIterator,
+             typename T1 , typename  T2, typename  T3, typename  T4,
+             typename T5 , typename  T6, typename  T7, typename  T8,
+             typename T9 , typename T10, typename T11, typename T12,
+             typename T13>
+   inline bool parse(const InputIterator begin,
+                     const InputIterator end,
+                     const std::string& delimiters,
+                     T1&  t1 ,  T2&  t2,  T3&  t3,  T4&  t4,
+                     T5&  t5 ,  T6&  t6,  T7&  t7,  T8&  t8,
+                     T9&  t9 , T10& t10, T11& t11, T12& t12,
+                     T13& t13)
+   {
+      typedef typename details::is_valid_iterator<InputIterator>::type itr_type;
+      details::convert_type_assert<itr_type>();
+      static const std::size_t token_count = 13;
+      typedef std::pair<InputIterator,InputIterator> iterator_type;
+      typedef iterator_type* iterator_type_ptr;
+      iterator_type token_list[token_count];
+
+      const std::size_t parsed_token_count = split_n(delimiters,
+                                                     begin,end,
+                                                     token_count,
+                                                     token_list,
+                                                     split_options::compress_delimiters);
+      if (token_count > parsed_token_count)
+         return false;
+
+      iterator_type_ptr itr = token_list;
+
+      strtk_cmpstmt( 1)
+      strtk_cmpstmt( 2)
+      strtk_cmpstmt( 3)
+      strtk_cmpstmt( 4)
+      strtk_cmpstmt( 5)
+      strtk_cmpstmt( 6)
+      strtk_cmpstmt( 7)
+      strtk_cmpstmt( 8)
+      strtk_cmpstmt( 9)
+      strtk_cmpstmt(10)
+      strtk_cmpstmt(11)
+      strtk_cmpstmt(12)
+      return string_to_type_converter((*itr).first,(*itr).second,t13);
+   }
+
+   template <typename InputIterator,
              typename T1, typename  T2, typename  T3, typename T4,
              typename T5, typename  T6, typename  T7, typename T8,
              typename T9, typename T10, typename T11, typename T12>
@@ -7927,11 +8118,6 @@ namespace strtk
          return false;
 
       iterator_type_ptr itr = token_list;
-
-      #define strtk_cmpstmt(N)                                         \
-      if (!string_to_type_converter((*itr).first,(*itr).second, t##N)) \
-         return false;                                                 \
-      ++itr;                                                           \
 
       strtk_cmpstmt( 1)
       strtk_cmpstmt( 2)
@@ -9570,8 +9756,80 @@ namespace strtk
       return parse(range.first,range.second,delimiters,n,priority_queue,split_option);
    }
 
-   template <typename T1, typename T2, typename T3, typename  T4,
-             typename T5, typename T6, typename T7, typename  T8,
+   template <typename T1 , typename T2 , typename T3 , typename  T4,
+             typename T5 , typename T6 , typename T7 , typename  T8,
+             typename T9 , typename T10, typename T11, typename T12,
+             typename T13, typename T14, typename T15, typename T16>
+   inline bool parse(const std::string& data,
+                     const std::string& delimiters,
+                     T1&  t1 ,  T2&  t2,  T3&  t3,  T4&  t4,
+                     T5&  t5 ,  T6&  t6,  T7&  t7,  T8&  t8,
+                     T9&  t9 , T10& t10, T11& t11, T12& t12,
+                     T13& t13, T14& t14, T15& t15, T16& t16)
+   {
+      return parse(data.data(),
+                   data.data() + data.size(),
+                   delimiters,
+                   t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,
+                   typename details::ca_type<T16, typename details::is_stl_container<T12>::result_t>::type(t16));
+   }
+
+   template <typename T1 , typename T2 , typename T3 , typename  T4,
+             typename T5 , typename T6 , typename T7 , typename  T8,
+             typename T9 , typename T10, typename T11, typename T12,
+             typename T13, typename T14, typename T15>
+   inline bool parse(const std::string& data,
+                     const std::string& delimiters,
+                     T1&  t1 ,  T2&  t2,  T3&  t3,  T4&  t4,
+                     T5&  t5 ,  T6&  t6,  T7&  t7,  T8&  t8,
+                     T9&  t9 , T10& t10, T11& t11, T12& t12,
+                     T13& t13, T14& t14, T15& t15)
+   {
+      return parse(data.data(),
+                   data.data() + data.size(),
+                   delimiters,
+                   t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,
+                   typename details::ca_type<T15, typename details::is_stl_container<T12>::result_t>::type(t15));
+   }
+
+   template <typename T1 , typename T2 , typename T3 , typename  T4,
+             typename T5 , typename T6 , typename T7 , typename  T8,
+             typename T9 , typename T10, typename T11, typename T12,
+             typename T13, typename T14>
+   inline bool parse(const std::string& data,
+                     const std::string& delimiters,
+                     T1&  t1 ,  T2&  t2,  T3&  t3,  T4&  t4,
+                     T5&  t5 ,  T6&  t6,  T7&  t7,  T8&  t8,
+                     T9&  t9 , T10& t10, T11& t11, T12& t12,
+                     T13& t13, T14& t14)
+   {
+      return parse(data.data(),
+                   data.data() + data.size(),
+                   delimiters,
+                   t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,
+                   typename details::ca_type<T14, typename details::is_stl_container<T12>::result_t>::type(t14));
+   }
+
+   template <typename T1 , typename T2 , typename T3 , typename  T4,
+             typename T5 , typename T6 , typename T7 , typename  T8,
+             typename T9 , typename T10, typename T11, typename T12,
+             typename T13>
+   inline bool parse(const std::string& data,
+                     const std::string& delimiters,
+                     T1&  t1 ,  T2&  t2,  T3&  t3,  T4&  t4,
+                     T5&  t5 ,  T6&  t6,  T7&  t7,  T8&  t8,
+                     T9&  t9 , T10& t10, T11& t11, T12& t12,
+                     T13& t13)
+   {
+      return parse(data.data(),
+                   data.data() + data.size(),
+                   delimiters,
+                   t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,
+                   typename details::ca_type<T13, typename details::is_stl_container<T12>::result_t>::type(t13));
+   }
+
+   template <typename T1, typename T2 , typename T3 , typename  T4,
+             typename T5, typename T6 , typename T7 , typename  T8,
              typename T9, typename T10, typename T11, typename T12>
    inline bool parse(const std::string& data,
                      const std::string& delimiters,
