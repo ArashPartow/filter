@@ -5371,7 +5371,8 @@ namespace strtk
                                             std::back_inserter(idx_.token_list),
                                             split_mode_);
 
-            row_end_index_ = row_start_index_ + token_count - 1;
+            row_end_index_ = static_cast<index_t>(row_start_index_ + token_count - 1);
+
             idx_.row_index.push_back(std::make_pair(row_start_index_,row_end_index_));
 
             if (token_count > idx_.max_column)
@@ -5389,20 +5390,20 @@ namespace strtk
 
    public:
 
-      inline row_range_t range(std::size_t lower_bound,
-                                  std::size_t upper_bound = std::numeric_limits<std::size_t>::max()) const
+      inline row_range_t range(index_t lower_bound,
+                               index_t upper_bound = std::numeric_limits<index_t>::max()) const
       {
-         if (upper_bound == std::numeric_limits<std::size_t>::max())
+         if (upper_bound == std::numeric_limits<index_t>::max())
          {
-            upper_bound = dsv_index_.token_list.size();
+            upper_bound = static_cast<index_t>(dsv_index_.token_list.size());
          }
          else if (upper_bound > dsv_index_.token_list.size())
          {
-            return row_range_t(std::numeric_limits<std::size_t>::max(),std::numeric_limits<std::size_t>::max());
+            return row_range_t(std::numeric_limits<index_t>::max(),std::numeric_limits<index_t>::max());
          }
          else if (lower_bound > upper_bound)
          {
-            return row_range_t(std::numeric_limits<std::size_t>::max(),std::numeric_limits<std::size_t>::max());
+            return row_range_t(std::numeric_limits<index_t>::max(),std::numeric_limits<index_t>::max());
          }
          return row_range_t(lower_bound,upper_bound);
       }
@@ -5876,10 +5877,10 @@ namespace strtk
                return true;
          }
 
-         col_range_t range(const std::size_t& lower_bound,
-                           const std::size_t& upper_bound = std::numeric_limits<std::size_t>::max()) const
+         col_range_t range(const index_t& lower_bound,
+                           const index_t& upper_bound = std::numeric_limits<index_t>::max()) const
          {
-            if (std::numeric_limits<std::size_t>::max() != upper_bound)
+            if (std::numeric_limits<index_t>::max() != upper_bound)
                return col_range_t(lower_bound,upper_bound);
             else
               return col_range_t(lower_bound,static_cast<index_t>(size()));
