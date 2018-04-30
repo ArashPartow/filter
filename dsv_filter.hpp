@@ -217,9 +217,9 @@ public:
          if (selected_column[c])
          {
             if (append_delimeter)
-              row_result.append(output_delimiter_);
+               row_result.append(output_delimiter_);
             else
-              append_delimeter = true;
+               append_delimeter = true;
 
             strtk::token_grid::range_t token = row_.token(c);
             row_result.append(token.first,token.second);
