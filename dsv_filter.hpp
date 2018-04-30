@@ -210,17 +210,19 @@ public:
          row_ = grid_.row(r);
       }
 
+      bool append_delimeter = false;
+
       for (std::size_t c = 0; c < column_.size(); ++c)
       {
          if (selected_column[c])
          {
+            if (append_delimeter)
+              row_result.append(output_delimiter_);
+            else
+              append_delimeter = true;
+
             strtk::token_grid::range_t token = row_.token(c);
             row_result.append(token.first,token.second);
-
-            if (c < (column_.size() - 1))
-            {
-               row_result.append(output_delimiter_);
-            }
          }
       }
 
