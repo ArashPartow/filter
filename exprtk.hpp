@@ -2,7 +2,7 @@
  ******************************************************************
  *           C++ Mathematical Expression Toolkit Library          *
  *                                                                *
- * Author: Arash Partow (1999-2018)                               *
+ * Author: Arash Partow (1999-2019)                               *
  * URL: http://www.partow.net/programming/exprtk/index.html       *
  *                                                                *
  * Copyright notice:                                              *
@@ -5243,7 +5243,7 @@ namespace exprtk
 
       template <typename T,
                 typename Allocator,
-                template <typename,typename> class Sequence>
+                template <typename, typename> class Sequence>
       inline bool all_nodes_valid(const Sequence<expression_node<T>*,Allocator>& b)
       {
          for (std::size_t i = 0; i < b.size(); ++i)
@@ -5270,7 +5270,7 @@ namespace exprtk
 
       template <typename T,
                 typename Allocator,
-                template <typename,typename> class Sequence>
+                template <typename, typename> class Sequence>
       inline bool all_nodes_variables(Sequence<expression_node<T>*,Allocator>& b)
       {
          for (std::size_t i = 0; i < b.size(); ++i)
@@ -5296,7 +5296,7 @@ namespace exprtk
       template <typename NodeAllocator,
                 typename T,
                 typename Allocator,
-                template <typename,typename> class Sequence>
+                template <typename, typename> class Sequence>
       inline void free_all_nodes(NodeAllocator& node_allocator, Sequence<expression_node<T>*,Allocator>& b)
       {
          for (std::size_t i = 0; i < b.size(); ++i)
@@ -5406,7 +5406,7 @@ namespace exprtk
          };
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          class sequence_vector_impl : public vector_holder_base
          {
          public:
@@ -5854,7 +5854,7 @@ namespace exprtk
 
          template <typename T,
                    typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          static inline void execute(Sequence<std::pair<expression_node<T>*,bool>,Allocator>& branch)
          {
             for (std::size_t i = 0; i < branch.size(); ++i)
@@ -6682,7 +6682,7 @@ namespace exprtk
          typedef expression_node<T>* expression_ptr;
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          switch_node(const Sequence<expression_ptr,Allocator>& arg_list)
          {
             if (1 != (arg_list.size() & 1))
@@ -6760,7 +6760,7 @@ namespace exprtk
          typedef expression_node<T>* expression_ptr;
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          switch_n_node(const Sequence<expression_ptr,Allocator>& arg_list)
          : switch_node<T>(arg_list)
          {}
@@ -6779,7 +6779,7 @@ namespace exprtk
          typedef expression_node<T>* expression_ptr;
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          multi_switch_node(const Sequence<expression_ptr,Allocator>& arg_list)
          {
             if (0 != (arg_list.size() & 1))
@@ -8953,7 +8953,7 @@ namespace exprtk
          typedef irange_t*                 irange_ptr;
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          str_vararg_node(const Sequence<expression_ptr,Allocator>& arg_list)
          : final_node_(arg_list.back()),
            final_deletable_(branch_deletable(final_node_)),
@@ -9419,7 +9419,7 @@ namespace exprtk
          typedef expression_node<T>* expression_ptr;
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          vararg_node(const Sequence<expression_ptr,Allocator>& arg_list)
          {
             arg_list_     .resize(arg_list.size());
@@ -9479,7 +9479,7 @@ namespace exprtk
          typedef expression_node<T>* expression_ptr;
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          vararg_varnode(const Sequence<expression_ptr,Allocator>& arg_list)
          {
             arg_list_.resize(arg_list.size());
@@ -12323,7 +12323,7 @@ namespace exprtk
 
          template <typename Type,
                    typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          static inline T process(const Sequence<Type,Allocator>& arg_list)
          {
             switch (arg_list.size())
@@ -12390,7 +12390,7 @@ namespace exprtk
 
          template <typename Type,
                    typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          static inline T process(const Sequence<Type,Allocator>& arg_list)
          {
             switch (arg_list.size())
@@ -12457,7 +12457,7 @@ namespace exprtk
 
          template <typename Type,
                    typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          static inline T process(const Sequence<Type,Allocator>& arg_list)
          {
             switch (arg_list.size())
@@ -12513,7 +12513,7 @@ namespace exprtk
 
          template <typename Type,
                    typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          static inline T process(const Sequence<Type,Allocator>& arg_list)
          {
             switch (arg_list.size())
@@ -12584,7 +12584,7 @@ namespace exprtk
 
          template <typename Type,
                    typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          static inline T process(const Sequence<Type,Allocator>& arg_list)
          {
             switch (arg_list.size())
@@ -12655,7 +12655,7 @@ namespace exprtk
 
          template <typename Type,
                    typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          static inline T process(const Sequence<Type,Allocator>& arg_list)
          {
             switch (arg_list.size())
@@ -12735,7 +12735,7 @@ namespace exprtk
 
          template <typename Type,
                    typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          static inline T process(const Sequence<Type,Allocator>& arg_list)
          {
             switch (arg_list.size())
@@ -12815,7 +12815,7 @@ namespace exprtk
 
          template <typename Type,
                    typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          static inline T process(const Sequence<Type,Allocator>& arg_list)
          {
             switch (arg_list.size())
@@ -15543,7 +15543,7 @@ namespace exprtk
          template <typename node_type,
                    typename Type,
                    typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          inline expression_node<typename node_type::value_type>* allocate(const Sequence<Type,Allocator>& seq) const
          {
             return (new node_type(seq));
@@ -19172,7 +19172,7 @@ namespace exprtk
          {}
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          inline std::size_t symbols(Sequence<symbol_t,Allocator>& symbols_list)
          {
             if (!collect_variables_ && !collect_functions_)
@@ -19195,7 +19195,7 @@ namespace exprtk
          }
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          inline std::size_t assignment_symbols(Sequence<symbol_t,Allocator>& assignment_list)
          {
             if (!collect_assignments_)
@@ -22551,7 +22551,7 @@ namespace exprtk
 
       template <typename Allocator1,
                 typename Allocator2,
-                template <typename,typename> class Sequence>
+                template <typename, typename> class Sequence>
       inline expression_node_ptr simplify(Sequence<expression_node_ptr,Allocator1>& expression_list,
                                           Sequence<bool,Allocator2>& side_effect_list,
                                           const bool specialise_on_final_type = false)
@@ -26649,7 +26649,7 @@ namespace exprtk
          }
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          inline expression_node_ptr const_optimise_switch(Sequence<expression_node_ptr,Allocator>& arg_list)
          {
             expression_node_ptr result = error_node();
@@ -26685,7 +26685,7 @@ namespace exprtk
          }
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          inline expression_node_ptr const_optimise_mswitch(Sequence<expression_node_ptr,Allocator>& arg_list)
          {
             expression_node_ptr result = error_node();
@@ -26810,7 +26810,7 @@ namespace exprtk
          };
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          inline expression_node_ptr switch_statement(Sequence<expression_node_ptr,Allocator>& arg_list)
          {
             if (arg_list.empty())
@@ -26850,7 +26850,7 @@ namespace exprtk
          }
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          inline expression_node_ptr multi_switch_statement(Sequence<expression_node_ptr,Allocator>& arg_list)
          {
             if (!all_nodes_valid(arg_list))
@@ -27162,7 +27162,7 @@ namespace exprtk
          }
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          inline expression_node_ptr const_optimise_varargfunc(const details::operator_type& operation, Sequence<expression_node_ptr,Allocator>& arg_list)
          {
             expression_node_ptr temp_node = error_node();
@@ -27206,7 +27206,7 @@ namespace exprtk
          }
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          inline expression_node_ptr varnode_optimise_varargfunc(const details::operator_type& operation, Sequence<expression_node_ptr,Allocator>& arg_list)
          {
             switch (operation)
@@ -27229,7 +27229,7 @@ namespace exprtk
          }
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          inline expression_node_ptr vectorize_func(const details::operator_type& operation, Sequence<expression_node_ptr,Allocator>& arg_list)
          {
             if (1 == arg_list.size())
@@ -27254,7 +27254,7 @@ namespace exprtk
          }
 
          template <typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          inline expression_node_ptr vararg_function(const details::operator_type& operation, Sequence<expression_node_ptr,Allocator>& arg_list)
          {
             if (!all_nodes_valid(arg_list))
@@ -27616,7 +27616,7 @@ namespace exprtk
 
          template <typename NodePtr,
                    typename Allocator,
-                   template <typename,typename> class Sequence>
+                   template <typename, typename> class Sequence>
          inline bool is_constant_foldable(const Sequence<NodePtr,Allocator>& b) const
          {
             for (std::size_t i = 0; i < b.size(); ++i)
@@ -28154,7 +28154,7 @@ namespace exprtk
          case_stmt(details::e_xnor, details::xnor_op) \
 
          #ifndef exprtk_disable_cardinal_pow_optimisation
-         template <typename TType, template <typename,typename> class IPowNode>
+         template <typename TType, template <typename, typename> class IPowNode>
          inline expression_node_ptr cardinal_pow_optimisation_impl(const TType& v, const unsigned int& p)
          {
             switch (p)
@@ -29589,7 +29589,10 @@ namespace exprtk
             static inline std::string id(expression_generator<Type>& expr_gen,
                                          const details::operator_type o0, const details::operator_type o1)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "t");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "t)" << expr_gen.to_str(o1)
+                         << "t";
             }
          };
 
@@ -29649,7 +29652,10 @@ namespace exprtk
             static inline std::string id(expression_generator<Type>& expr_gen,
                                          const details::operator_type o0, const details::operator_type o1)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "t)");
+               return details::build_string()
+                         << "t"  << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "t)";
             }
          };
 
@@ -29710,7 +29716,10 @@ namespace exprtk
             static inline std::string id(expression_generator<Type>& expr_gen,
                                          const details::operator_type o0, const details::operator_type o1)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "t");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "t)" << expr_gen.to_str(o1)
+                         << "t";
             }
          };
 
@@ -29770,7 +29779,10 @@ namespace exprtk
             static inline std::string id(expression_generator<Type>& expr_gen,
                                          const details::operator_type o0, const details::operator_type o1)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "t)");
+               return details::build_string()
+                         << "t"  << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "t)";
             }
          };
 
@@ -29830,7 +29842,10 @@ namespace exprtk
             static inline std::string id(expression_generator<Type>& expr_gen,
                                          const details::operator_type o0, const details::operator_type o1)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "t");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "t)" << expr_gen.to_str(o1)
+                         << "t";
             }
          };
 
@@ -29890,7 +29905,10 @@ namespace exprtk
             static inline std::string id(expression_generator<Type>& expr_gen,
                                          const details::operator_type o0, const details::operator_type o1)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "t)");
+               return details::build_string()
+                         << "t"  << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "t)";
             }
          };
 
@@ -29950,7 +29968,10 @@ namespace exprtk
             static inline std::string id(expression_generator<Type>& expr_gen,
                                          const details::operator_type o0, const details::operator_type o1)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "t");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "t)" << expr_gen.to_str(o1)
+                         << "t";
             }
          };
 
@@ -30010,7 +30031,10 @@ namespace exprtk
 
             static inline std::string id(expression_generator<Type>& expr_gen, const details::operator_type o0, const details::operator_type o1)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "t)");
+               return details::build_string()
+                         << "t"  << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "t)";
             }
          };
 
@@ -30124,7 +30148,10 @@ namespace exprtk
             static inline std::string id(expression_generator<Type>& expr_gen,
                                          const details::operator_type o0, const details::operator_type o1)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "t");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "t)" << expr_gen.to_str(o1)
+                         << "t";
             }
          };
 
@@ -30238,7 +30265,10 @@ namespace exprtk
             static inline std::string id(expression_generator<Type>& expr_gen,
                                          const details::operator_type o0, const details::operator_type o1)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "t)");
+               return details::build_string()
+                         << "t"  << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "t)";
             }
          };
 
@@ -30361,7 +30391,10 @@ namespace exprtk
 
             static inline std::string id(expression_generator<Type>& expr_gen, const details::operator_type o0, const details::operator_type o1)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "t)");
+               return details::build_string()
+                         << "t"  << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "t)";
             }
          };
 
@@ -30483,7 +30516,10 @@ namespace exprtk
             static inline std::string id(expression_generator<Type>& expr_gen,
                                          const details::operator_type o0, const details::operator_type o1)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "t");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "t)" << expr_gen.to_str(o1)
+                         << "t";
             }
          };
 
@@ -30612,7 +30648,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "t)" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t)";
             }
          };
 
@@ -30696,7 +30736,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "t)" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t)";
             }
          };
 
@@ -30780,7 +30824,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "t)" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t)";
             }
          };
 
@@ -30864,7 +30912,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "t)" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t)";
             }
          };
 
@@ -30948,7 +31000,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "t)" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t)";
             }
          };
 
@@ -31137,7 +31193,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "t)" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t)";
             }
          };
 
@@ -31376,7 +31436,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "t)" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t)";
             }
          };
 
@@ -31565,7 +31629,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "t)" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t)";
             }
          };
 
@@ -31753,7 +31821,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "t)" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t)";
             }
          };
 
@@ -31805,7 +31877,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t))");
+               return details::build_string()
+                         << "t"  << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t))";
             }
          };
 
@@ -31861,7 +31937,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t))");
+               return details::build_string()
+                         << "t"  << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t))";
             }
          };
 
@@ -31917,7 +31997,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t))");
+               return details::build_string()
+                         << "t"  << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t))";
             }
          };
 
@@ -31973,7 +32057,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t))");
+               return details::build_string()
+                         << "t"  << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t))";
             }
          };
 
@@ -32030,7 +32118,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t))");
+               return details::build_string()
+                         << "t"  << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t))";
             }
          };
 
@@ -32087,7 +32179,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t))");
+               return details::build_string()
+                         << "t"  << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t))";
             }
          };
 
@@ -32143,7 +32239,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t))");
+               return details::build_string()
+                         << "t"  << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t))";
             }
          };
 
@@ -32199,7 +32299,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t))");
+               return details::build_string()
+                         << "t"  << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t))";
             }
          };
 
@@ -32255,7 +32359,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "(t" << expr_gen.to_str(o2) << "t))");
+               return details::build_string()
+                         << "t"  << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "(t" << expr_gen.to_str(o2)
+                         << "t))";
             }
          };
 
@@ -32311,7 +32419,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "((t" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "t"   << expr_gen.to_str(o0)
+                         << "((t" << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t)";
             }
          };
 
@@ -32367,7 +32479,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "((t" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "t"   << expr_gen.to_str(o0)
+                         << "((t" << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t)";
             }
          };
 
@@ -32423,7 +32539,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "((t" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "t"   << expr_gen.to_str(o0)
+                         << "((t" << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t)";
             }
          };
 
@@ -32479,7 +32599,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "((t" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "t"   << expr_gen.to_str(o0)
+                         << "((t" << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t)";
             }
          };
 
@@ -32536,7 +32660,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "((t" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "t"   << expr_gen.to_str(o0)
+                         << "((t" << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t)";
             }
         };
 
@@ -32593,7 +32721,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "((t" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "t"   << expr_gen.to_str(o0)
+                         << "((t" << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t)";
             }
          };
 
@@ -32649,7 +32781,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "((t" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "t"   << expr_gen.to_str(o0)
+                         << "((t" << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t)";
             }
          };
 
@@ -32706,7 +32842,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "t" << expr_gen.to_str(o0) << "((t" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t)");
+               return details::build_string()
+                         << "t"   << expr_gen.to_str(o0)
+                         << "((t" << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t)";
             }
          };
 
@@ -32779,7 +32919,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "((t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "((t" << expr_gen.to_str(o0)
+                         << "t)"  << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -32836,7 +32980,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "((t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "((t" << expr_gen.to_str(o0)
+                         << "t)"  << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -32892,7 +33040,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "((t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "((t" << expr_gen.to_str(o0)
+                         << "t)"  << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -32948,7 +33100,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "((t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "((t" << expr_gen.to_str(o0)
+                         << "t)"  << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -33004,7 +33160,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "((t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "((t" << expr_gen.to_str(o0)
+                         << "t)"  << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -33060,7 +33220,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "((t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "((t" << expr_gen.to_str(o0)
+                         << "t)"  << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -33117,7 +33281,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "((t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "((t" << expr_gen.to_str(o0)
+                         << "t)"  << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -33174,7 +33342,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "((t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "((t" << expr_gen.to_str(o0)
+                         << "t)"  << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -33230,7 +33402,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "((t" << expr_gen.to_str(o0) << "t)" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "((t" << expr_gen.to_str(o0)
+                         << "t)"  << expr_gen.to_str(o1)
+                         << "t)"  << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -33286,7 +33462,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "t)" << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -33343,7 +33523,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "t)" << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -33399,7 +33583,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "t)" << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -33454,7 +33642,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "t)" << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -33510,7 +33702,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "t)" << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -33566,7 +33762,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "t)" << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -33623,7 +33823,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "t)" << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -33680,7 +33884,11 @@ namespace exprtk
                                          const details::operator_type o1,
                                          const details::operator_type o2)
             {
-               return (details::build_string() << "(t" << expr_gen.to_str(o0) << "(t" << expr_gen.to_str(o1) << "t)" << expr_gen.to_str(o2) << "t");
+               return details::build_string()
+                         << "(t" << expr_gen.to_str(o0)
+                         << "(t" << expr_gen.to_str(o1)
+                         << "t)" << expr_gen.to_str(o2)
+                         << "t";
             }
          };
 
@@ -35978,7 +36186,7 @@ namespace exprtk
       def_fp_retval(6)
 
       template <typename Allocator,
-                template <typename,typename> class Sequence>
+                template <typename, typename> class Sequence>
       inline bool add(const std::string& name,
                       const std::string& expression,
                       const Sequence<std::string,Allocator>& var_list,
@@ -36074,7 +36282,7 @@ namespace exprtk
    private:
 
       template <typename Allocator,
-                template <typename,typename> class Sequence>
+                template <typename, typename> class Sequence>
       bool compile_expression(const std::string& name,
                               const std::string& expression,
                               const Sequence<std::string,Allocator>& input_var_list,
@@ -38357,9 +38565,9 @@ namespace exprtk
    namespace information
    {
       static const char* library = "Mathematical Expression Toolkit";
-      static const char* version = "2.7182818284590452353602874713526624977572470936999"
-                                   "595749669676277240766303535475945713821785251664274";
-      static const char* date    = "20181216";
+      static const char* version = "2.71828182845904523536028747135266249775724709369995"
+                                   "9574966967627724076630353547594571382178525166427427";
+      static const char* date    = "20190101";
 
       static inline std::string data()
       {
