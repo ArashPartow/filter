@@ -2,7 +2,7 @@
  *****************************************************************
  *                     String Toolkit Library                    *
  *                                                               *
- * Author: Arash Partow (2002-2019)                              *
+ * Author: Arash Partow (2002-2020)                              *
  * URL: http://www.partow.net/programming/strtk/index.html       *
  *                                                               *
  * Copyright notice:                                             *
@@ -24,9 +24,9 @@
 #include <cerrno>
 #include <cmath>
 #include <cstddef>
+#include <cstdint>
 #include <cstring>
 #include <deque>
-#include <exception>
 #include <fstream>
 #include <iostream>
 #include <iterator>
@@ -1030,7 +1030,9 @@ namespace strtk
 
    private:
 
-      single_delimiter_predicate<T>& operator=(const single_delimiter_predicate<T>&);
+      single_delimiter_predicate(const single_delimiter_predicate<T>&) = default;
+      single_delimiter_predicate<T>& operator=(const single_delimiter_predicate<T>&) = delete;
+
       const T delimiter_;
    };
 
@@ -1518,8 +1520,9 @@ namespace strtk
    }
 
    template <typename Predicate>
-   inline void remove_trailing(Predicate predicate, std::string& s)
+   inline void remove_trailing(Predicate /*predicate*/, std::string& /*s*/)
    {
+      /*
       if (s.empty()) return;
       const std::size_t removal_count = remove_trailing(predicate,
                                                         const_cast<char*>(to_ptr(s)),
@@ -1528,6 +1531,7 @@ namespace strtk
       {
          s.resize(s.size() - removal_count);
       }
+      */
    }
 
    template <typename Iterator, typename Predicate>
@@ -1553,7 +1557,7 @@ namespace strtk
    }
 
    template <typename T, typename Predicate>
-   inline std::size_t remove_leading(Predicate predicate, const range::adapter<T>& r)
+   inline std::size_t remove_leading(Predicate& predicate, const range::adapter<T>& r)
    {
       return remove_leading(predicate,r.begin(),r.end());
    }
@@ -1603,7 +1607,7 @@ namespace strtk
    }
 
    template <typename Predicate>
-   inline void remove_leading(Predicate predicate, std::string& s)
+   inline void remove_leading(Predicate& predicate, std::string& s)
    {
       if (s.empty()) return;
       const std::size_t removal_count = remove_leading(predicate,
@@ -2340,7 +2344,7 @@ namespace strtk
       template <typename Iterartor,
                 typename Predicate,
                 typename T = std::pair<Iterator,Iterator> >
-      class tokenizer_iterator : public std::iterator<std::forward_iterator_tag,T>
+      class tokenizer_iterator
       {
       protected:
 
@@ -2349,6 +2353,12 @@ namespace strtk
          typedef typename std::pair<iterator,iterator> range_type;
 
       public:
+
+         using iterator_category = std::forward_iterator_tag;
+         using value_type        = T;
+         using difference_type   = ptrdiff_t;
+         using pointer           = T*;
+         using reference         = T&;
 
          explicit inline tokenizer_iterator(const iterator begin,
                                             const iterator end,
@@ -2483,6 +2493,8 @@ namespace strtk
             return (*this);
          }
 
+         tokenizer_iterator(const tokenizer_iterator&) = default;
+
          inline std::string remaining() const
          {
             return std::string(current_token_.first,end_);
@@ -2532,6 +2544,8 @@ namespace strtk
         begin_itr_(begin_, end_, predicate_, tokenize_options_),
         end_itr_(end_, end_, predicate_, tokenize_options_)
       {}
+
+      tokenizer(const tokenizer& t) = default;
 
       inline tokenizer& operator=(const tokenizer& t)
       {
@@ -2607,15 +2621,15 @@ namespace strtk
    } // namespace std_string
 
    template <typename Sequence>
-   class range_to_type_back_inserter_iterator : public std::iterator<std::output_iterator_tag,
-                                                                     void,
-                                                                     void,
-                                                                     void,
-                                                                     void>
+   class range_to_type_back_inserter_iterator
    {
    public:
 
-      typedef typename Sequence::value_type value_type;
+      using iterator_category = std::output_iterator_tag;
+      using value_type        = typename Sequence::value_type;
+      using difference_type   = void;
+      using pointer           = void*;
+      using reference         = void;
 
       explicit inline range_to_type_back_inserter_iterator(Sequence& sequence)
       : sequence_(sequence)
@@ -2698,15 +2712,15 @@ namespace strtk
    }
 
    template <typename Set>
-   class range_to_type_inserter_iterator : public std::iterator<std::output_iterator_tag,
-                                                                void,
-                                                                void,
-                                                                void,
-                                                                void>
+   class range_to_type_inserter_iterator
    {
    public:
 
-      typedef typename Set::value_type value_type;
+      using iterator_category = std::output_iterator_tag;
+      using value_type        = typename Set::value_type;
+      using difference_type   = void;
+      using pointer           = void*;
+      using reference         = void;
 
       explicit inline range_to_type_inserter_iterator(Set& set)
       : set_(set)
@@ -2771,15 +2785,15 @@ namespace strtk
    }
 
    template <typename Container>
-   class range_to_type_push_inserter_iterator : public std::iterator<std::output_iterator_tag,
-                                                                     void,
-                                                                     void,
-                                                                     void,
-                                                                     void>
+   class range_to_type_push_inserter_iterator
    {
    public:
 
-      typedef typename Container::value_type value_type;
+      using iterator_category = std::output_iterator_tag;
+      using value_type        = typename Container::value_type;
+      using difference_type   = void;
+      using pointer           = void*;
+      using reference         = void;
 
       explicit inline range_to_type_push_inserter_iterator(Container& container)
       : container_(container)
@@ -2844,13 +2858,15 @@ namespace strtk
    }
 
    template <typename Sequence>
-   class back_inserter_with_valuetype_iterator : public std::iterator<std::output_iterator_tag,
-                                                                      typename Sequence::value_type,
-                                                                      void,
-                                                                      void,
-                                                                      void>
+   class back_inserter_with_valuetype_iterator
    {
    public:
+
+      using iterator_category = std::output_iterator_tag;
+      using value_type        = typename Sequence::value_type;
+      using difference_type   = void;
+      using pointer           = void*;
+      using reference         = void;
 
       explicit inline back_inserter_with_valuetype_iterator(Sequence& sequence)
       : sequence_(sequence)
@@ -2907,13 +2923,15 @@ namespace strtk
    }
 
    template <typename Set>
-   class inserter_with_valuetype_iterator : public std::iterator<std::output_iterator_tag,
-                                                                 typename Set::value_type,
-                                                                 void,
-                                                                 void,
-                                                                 void>
+   class inserter_with_valuetype_iterator
    {
    public:
+
+      using iterator_category = std::output_iterator_tag;
+      using value_type        = typename Set::value_type;
+      using difference_type   = void;
+      using pointer           = void*;
+      using reference         = void;
 
       explicit inline inserter_with_valuetype_iterator(Set& set)
       : set_(set)
@@ -2971,13 +2989,15 @@ namespace strtk
    }
 
    template <typename Container>
-   class push_inserter_iterator : public std::iterator<std::output_iterator_tag,
-                                                       void,
-                                                       void,
-                                                       void,
-                                                       void>
+   class push_inserter_iterator
    {
    public:
+
+      using iterator_category = std::output_iterator_tag;
+      using value_type        = void;
+      using difference_type   = void;
+      using pointer           = void*;
+      using reference         = void;
 
       explicit inline push_inserter_iterator(Container& container)
       : container_(container)
@@ -3026,15 +3046,15 @@ namespace strtk
    }
 
    template <typename T>
-   class range_to_ptr_type_iterator : public std::iterator<std::output_iterator_tag,
-                                                           void,
-                                                           void,
-                                                           void,
-                                                           void>
+   class range_to_ptr_type_iterator
    {
    public:
 
-      typedef T value_type;
+      using iterator_category = std::output_iterator_tag;
+      using value_type        = T;
+      using difference_type   = void;
+      using pointer           = void*;
+      using reference         = void;
 
       explicit inline range_to_ptr_type_iterator(T* pointer, std::size_t& insert_count)
       : pointer_(pointer),
@@ -3121,7 +3141,7 @@ namespace strtk
 
    private:
 
-      T* pointer_;
+      mutable T* pointer_;
       std::size_t& insert_count_;
    };
 
@@ -3139,13 +3159,15 @@ namespace strtk
    }
 
    template <typename T>
-   class counting_back_inserter_iterator : public std::iterator<std::output_iterator_tag,
-                                                                T,
-                                                                void,
-                                                                void,
-                                                                void>
+   class counting_back_inserter_iterator
    {
    public:
+
+      using iterator_category = std::output_iterator_tag;
+      using value_type        = T;
+      using difference_type   = void;
+      using pointer           = void*;
+      using reference         = void;
 
       explicit inline counting_back_inserter_iterator(std::size_t& counter)
       : counter_(counter)
@@ -3203,13 +3225,15 @@ namespace strtk
    }
 
    template <typename Function>
-   class functional_inserter_iterator : public std::iterator<std::output_iterator_tag,
-                                                             void,
-                                                             void,
-                                                             void,
-                                                             void>
+   class functional_inserter_iterator
    {
    public:
+
+      using iterator_category = std::output_iterator_tag;
+      using value_type        = void;
+      using difference_type   = void;
+      using pointer           = void*;
+      using reference         = void;
 
       explicit inline functional_inserter_iterator(Function function)
       : function_(function)
@@ -3716,7 +3740,7 @@ namespace strtk
 
    namespace regex_match_mode
    {
-      enum type
+      enum class type : std::size_t
       {
          match_all = 0,
          match_1   = 1,
@@ -3729,6 +3753,11 @@ namespace strtk
          match_8   = 8,
          match_9   = 9
       };
+
+      inline std::size_t to_index(type m)
+      {
+         return static_cast<std::size_t>(m);
+      }
    }
 
    template <typename InputIterator, typename OutputIterator>
@@ -3736,7 +3765,7 @@ namespace strtk
                                   const InputIterator begin,
                                   const InputIterator end,
                                   OutputIterator out,
-                                  const regex_match_mode::type mode = regex_match_mode::match_all)
+                                  const regex_match_mode::type mode = regex_match_mode::type::match_all)
    {
       boost::regex_iterator<InputIterator> itr(begin,end,delimiter_expression);
       boost::regex_iterator<InputIterator> itr_end;
@@ -3745,8 +3774,8 @@ namespace strtk
 
       while (itr_end != itr)
       {
-         range.first = (*itr)[mode].first;
-         range.second = (*itr)[mode].second;
+         range.first  = (*itr)[regex_match_mode::to_index(mode)].first;
+         range.second = (*itr)[regex_match_mode::to_index(mode)].second;
          (*out) = range;
          ++out;
          ++itr;
@@ -3761,7 +3790,7 @@ namespace strtk
                                   const InputIterator begin,
                                   const InputIterator end,
                                   OutputIterator out,
-                                  const regex_match_mode::type mode = regex_match_mode::match_all)
+                                  const regex_match_mode::type mode = regex_match_mode::type::match_all)
    {
       const boost::regex regex_expression(delimiter_expression);
       return split_regex(regex_expression,
@@ -3774,7 +3803,7 @@ namespace strtk
    inline std::size_t split_regex(const std::string& delimiter_expression,
                                   const std::string& text,
                                   OutputIterator out,
-                                  const regex_match_mode::type mode = regex_match_mode::match_all)
+                                  const regex_match_mode::type mode = regex_match_mode::type::match_all)
    {
       return split_regex(delimiter_expression,
                          text.begin(),text.end(),
@@ -3786,7 +3815,7 @@ namespace strtk
    inline std::size_t split_regex(const boost::regex& delimiter_expression,
                                   const std::string& text,
                                   OutputIterator out,
-                                  const regex_match_mode::type mode = regex_match_mode::match_all)
+                                  const regex_match_mode::type mode = regex_match_mode::type::match_all)
    {
       return split_regex(delimiter_expression,
                          text.begin(),text.end(),
@@ -3800,7 +3829,7 @@ namespace strtk
                                     const InputIterator end,
                                     const std::size_t& token_count,
                                     OutputIterator out,
-                                    const regex_match_mode::type mode = regex_match_mode::match_all)
+                                    const regex_match_mode::type mode = regex_match_mode::type::match_all)
    {
       boost::sregex_iterator itr(begin,end,delimiter_expression);
       const boost::sregex_iterator itr_end;
@@ -3809,8 +3838,8 @@ namespace strtk
 
       while (itr_end != itr)
       {
-         range.first = (*itr)[mode].first;
-         range.second = (*itr)[mode].second;
+         range.first  = (*itr)[regex_match_mode::to_index(mode)].first;
+         range.second = (*itr)[regex_match_mode::to_index(mode)].second;
          (*out) = range;
          ++out;
          ++itr;
@@ -3828,7 +3857,7 @@ namespace strtk
                                     const InputIterator end,
                                     const std::size_t& token_count,
                                     OutputIterator out,
-                                    const regex_match_mode::type mode = regex_match_mode::match_all)
+                                    const regex_match_mode::type mode = regex_match_mode::type::match_all)
    {
       const boost::regex regex_expression(delimiter_expression);
       return split_regex_n(regex_expression,
@@ -3843,7 +3872,7 @@ namespace strtk
                                     const std::string& text,
                                     const std::size_t& token_count,
                                     OutputIterator out,
-                                    const regex_match_mode::type mode = regex_match_mode::match_all)
+                                    const regex_match_mode::type mode = regex_match_mode::type::match_all)
    {
       return split_regex_n(delimiter_expression,
                            text.begin(),text.end(),
@@ -3857,7 +3886,7 @@ namespace strtk
                                     const std::string& text,
                                     const std::size_t& token_count,
                                     OutputIterator out,
-                                    const regex_match_mode::type mode = regex_match_mode::match_all)
+                                    const regex_match_mode::type mode = regex_match_mode::type::match_all)
    {
       return split_regex_n(delimiter_expression,
                            text.begin(),text.end(),
@@ -4585,7 +4614,7 @@ namespace strtk
          switch (rounds)
          {
             case 1 : {
-                       unsigned int block  = (unsigned char) (*itr) << 16;
+                       const unsigned int block = static_cast<unsigned char>(*itr) << 16;
                        *(out++) = bin_to_base64[( block >> 18 ) & 0x3F];
                        *(out++) = bin_to_base64[( block >> 12 ) & 0x3F];
                        *(out++) = '=';
@@ -5456,7 +5485,8 @@ namespace strtk
                idx_.max_column = token_count;
          }
 
-         row_processor<DelimiterPredicate> operator=(const row_processor<DelimiterPredicate>&);
+         row_processor(const row_processor<DelimiterPredicate>&) = default;
+         row_processor<DelimiterPredicate>& operator=(const row_processor<DelimiterPredicate>&) = delete;
 
          store& idx_;
          index_t row_start_index_;
@@ -6495,7 +6525,6 @@ namespace strtk
 
             if (index < dsv_index_.token_count(row))
             {
-               dsv_index_.token_list.begin() + (row.first + index);
                process_token_checked(*(dsv_index_.token_list.begin() + (row.first + index)),out);
             }
          }
@@ -7708,16 +7737,18 @@ namespace strtk
    {
    public:
 
-     filter_on_match(const std::string* begin, const std::string* end,
-                     OutputPredicate predicate,
-                     bool case_insensitive,
-                     bool allow_through_on_match = true)
-     : case_insensitive_(case_insensitive),
-       allow_through_on_match_(allow_through_on_match),
-       begin_(begin),
-       end_(end),
-       predicate_(predicate)
-     {}
+      filter_on_match(const std::string* begin, const std::string* end,
+                      OutputPredicate predicate,
+                      bool case_insensitive,
+                      bool allow_through_on_match = true)
+      : case_insensitive_(case_insensitive),
+        allow_through_on_match_(allow_through_on_match),
+        begin_(begin),
+        end_(end),
+        predicate_(predicate)
+      {}
+
+      filter_on_match(const filter_on_match&) = default;
 
       template <typename Iterator>
       inline void operator() (const std::pair<Iterator,Iterator>& range) const
@@ -7772,7 +7803,7 @@ namespace strtk
 
    private:
 
-      filter_on_match& operator=(const filter_on_match& fom);
+      filter_on_match& operator=(const filter_on_match& fom) = delete;
 
    private:
 
@@ -12699,16 +12730,19 @@ namespace strtk
    }
 
    template <typename Iterator>
-   class combination_iterator : public std::iterator<std::forward_iterator_tag,
-                                                     std::pair<Iterator,Iterator>,
-                                                     void,
-                                                     void>
+   class combination_iterator
    {
    public:
 
       typedef Iterator iterator;
       typedef const iterator const_iterator;
       typedef std::pair<Iterator,Iterator> range_type;
+
+      using iterator_category = std::forward_iterator_tag;
+      using value_type        = std::pair<Iterator,Iterator>;
+      using difference_type   = void;
+      using pointer           = void*;
+      using reference         = void;
 
       explicit inline combination_iterator(const std::size_t& k,
                                            iterator begin, iterator end,
@@ -18248,6 +18282,7 @@ namespace strtk
          return (*this);
       }
 
+      /*
       inline ext_string& remove_leading(const std::string& removal_set)
       {
          if (removal_set.empty())
@@ -18258,6 +18293,7 @@ namespace strtk
             strtk::remove_leading(multiple_char_delimiter_predicate(removal_set),s_);
          return (*this);
       }
+      */
 
       template <typename Predicate>
       inline ext_string& remove_trailing(const Predicate& p)
@@ -19541,7 +19577,9 @@ namespace strtk
 
       inline bool condition_like(const itr_type begin, const itr_type end) const
       {
-         return match(s_begin, s_end, begin, end,(unsigned char)'*', (unsigned char)'?');
+         return match(s_begin, s_end, begin, end,
+                      static_cast<unsigned char>('*'),
+                      static_cast<unsigned char>('?'));
       }
 
       inline bool condition_begins_with(const itr_type begin, const itr_type end) const
@@ -20858,9 +20896,10 @@ namespace strtk
             return *this;
          }
 
-         inline bool operator==(const T& t)
+         template <typename TConvertibleType>
+         inline bool operator==(const TConvertibleType& t)
          {
-            return initialised_ && (t_ == t);
+            return initialised_ && (t_ == static_cast<T>(t));
          }
 
          template <typename TConvertibleType>
@@ -20940,6 +20979,16 @@ namespace strtk
       inline bool operator==(const char* s, const attribute<std::string>& attrib)
       {
          return attrib.value() == s;
+      }
+
+      inline bool operator==(const attribute<std::string>& attrib, const char* s)
+      {
+         return attrib.value() == s;
+      }
+
+      inline bool operator!=(const attribute<std::string>& attrib, const char* s)
+      {
+         return !(attrib == s);
       }
 
       inline bool operator!=(const char* s, const attribute<std::string>& attrib)
@@ -21245,6 +21294,8 @@ namespace strtk
                    (0 != v.type_holder_) &&
                    (type_holder_ == v.type_holder_);
          }
+
+         value(const value&) = default;
 
          inline value& operator=(const value& v)
          {
@@ -23021,9 +23072,11 @@ namespace strtk
             return (*this);
          }
 
+         column_selector_iterator_impl(const column_selector_iterator_impl&) = default;
+
       private:
 
-         csii_t& operator=(const csii_t& csb);
+         csii_t& operator=(const csii_t& csb) = delete;
 
          const column_list_t& column_list_;
          iterator_type_ptr token_list_;
@@ -24113,6 +24166,8 @@ namespace strtk
             : parser_(p)
             {}
 
+            pair_token_processor(const pair_token_processor&) = default;
+
             inline void operator()(const range_type& r)
             {
                if (r.first == r.second)
@@ -24132,7 +24187,7 @@ namespace strtk
 
          private:
 
-            pair_token_processor operator=(const pair_token_processor&);
+            pair_token_processor operator=(const pair_token_processor&) = delete;
 
             parser<KeyValueMap>& parser_;
             range_type key_range;
